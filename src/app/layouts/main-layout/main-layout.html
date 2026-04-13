@@ -1,0 +1,69 @@
+
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-slate-900 flex flex-col py-8 px-4 gap-2 font-inter text-sm">
+<div class="mb-10 px-4">
+<h2 class="text-white font-headline font-bold text-xl tracking-tight">ServiçoPIM</h2>
+<p class="text-slate-400 text-xs mt-1">Terminal Manaus</p>
+<div class="mt-4 p-3 bg-slate-800/50 rounded-lg">
+<p class="text-blue-400 font-semibold text-xs">Turno Ativo: Alfa</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a [routerLink]="['/dashboard']" class="flex items-center gap-3 py-3 px-4 text-blue-400 bg-slate-800/50 rounded-r-lg border-l-4 border-blue-500 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a [routerLink]="['/ordens-de-servico']" class="flex items-center gap-3 py-3 px-4 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="precision_manufacturing">precision_manufacturing</span>
+<span>Ordens de Serviço</span>
+</a>
+<a [routerLink]="['/equipamentos']" class="flex items-center gap-3 py-3 px-4 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Equipamentos</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="engineering">engineering</span>
+<span>Mão de Obra</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Relatórios</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-800 pt-6 flex flex-col gap-1">
+<a class="flex items-center gap-3 py-3 px-4 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Central de Ajuda</span>
+</a>
+<a [routerLink]="['/login']" class="flex items-center gap-3 py-3 px-4 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sair</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 ml-64 min-h-screen relative">
+<header class="fixed top-0 right-0 left-64 z-50 bg-slate-900/60 backdrop-blur-xl h-16 flex justify-between items-center px-8 shadow-sm">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-400" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-64 font-body" placeholder="Pesquisar ordens, ativos ou pessoal..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4 items-center">
+<button class="text-slate-400 hover:bg-slate-800/80 p-2 rounded-lg transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-400 hover:bg-slate-800/80 p-2 rounded-lg transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-slate-800/50"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-slate-100">J. Henderson</p>
+<p class="text-[10px] text-blue-400 font-semibold tracking-wider">ENGENHEIRO CHEFE</p>
+</div>
+<img alt="Chief Engineer Profile" class="w-10 h-10 rounded-full object-cover border-2 border-slate-700" data-alt="Close-up portrait of a professional male engineer in his 40s with a clean-cut look and a focused expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLb3A8mZ1zDDW5hExb946WhB2qbmAqEDKBF_bV8toadPIuq0_cGSr7YxN34lyijkxOx31fq_slUEo1Pgg81NWBA0QhoSbesj9Dw9sqOQAI6Dtg5fUIujLnphcvyVppwz-tcH1HC7L5EG1pVahfBoB6fjnAlkbiYPK7BP8kINleuLpIkJqtB4lBIie-DzGRkCE1F-Adaprso-8rYHXekzSQR6puoGes-Sx-Gd8J0yrxK-CbvbpWlwD41LWeLI8-iiW4kBexF2GOTlg"/>
+</div>
+</div>
+</header>
+  <router-outlet></router-outlet>
+</main>

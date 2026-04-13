@@ -1,0 +1,256 @@
+<!-- SideNavBar Anchor -->
+<!-- TopNavBar Anchor -->
+<!-- Content Canvas -->
+<div class="pt-24 pb-12 px-12">
+<!-- Hero Header -->
+<div class="mb-10">
+<h1 class="font-headline font-extrabold text-4xl text-on-surface tracking-tighter mb-2">Operações Industriais</h1>
+<p class="text-on-surface-variant font-body">Monitorando fluxo de serviço ativo para o Distrito PIM - Setor 04</p>
+</div>
+<!-- KPI Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<!-- OS Abertas Hoje -->
+<div class="bg-surface-container-high p-6 rounded-xl relative overflow-hidden group hover:bg-surface-container-highest transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<p class="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">OS Abertas Hoje</p>
+<span class="material-symbols-outlined text-primary" data-icon="assignment_add">assignment_add</span>
+</div>
+<p class="text-4xl font-headline font-bold text-on-surface tracking-tight">42</p>
+<div class="mt-4 flex items-center gap-2 text-xs text-green-400">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>+12% em relação a ontem</span>
+</div>
+</div>
+<!-- OS em Andamento -->
+<div class="bg-surface-container-high p-6 rounded-xl relative overflow-hidden group hover:bg-surface-container-highest transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<p class="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">OS em Andamento</p>
+<span class="material-symbols-outlined text-primary" data-icon="settings_suggest">settings_suggest</span>
+</div>
+<p class="text-4xl font-headline font-bold text-on-surface tracking-tight">128</p>
+<div class="mt-4 w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[65%]"></div>
+</div>
+</div>
+<!-- OS Críticas -->
+<div class="bg-surface-container-high p-6 rounded-xl relative overflow-hidden group hover:bg-surface-container-highest transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<p class="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">OS Críticas</p>
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<p class="text-4xl font-headline font-bold text-error tracking-tight">07</p>
+<div class="mt-4 flex items-center gap-2 text-xs text-error">
+<span class="material-symbols-outlined text-sm" data-icon="priority_high">priority_high</span>
+<span>Ação imediata necessária</span>
+</div>
+</div>
+<!-- Tempo Médio -->
+<div class="bg-surface-container-high p-6 rounded-xl relative overflow-hidden group hover:bg-surface-container-highest transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<p class="text-on-surface-variant text-xs font-semibold tracking-wider uppercase">Conclusão Média</p>
+<span class="material-symbols-outlined text-tertiary" data-icon="timer">timer</span>
+</div>
+<div class="flex items-baseline gap-1">
+<p class="text-4xl font-headline font-bold text-on-surface tracking-tight">3.4</p>
+<p class="text-on-surface-variant text-sm font-medium">hrs</p>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+<span>Dentro da meta de SLA</span>
+</div>
+</div>
+</div>
+<!-- Main Content Area: Recent Service Orders -->
+<section class="bg-surface-container-low rounded-xl overflow-hidden">
+<div class="p-6 flex justify-between items-center bg-surface-bright/20 border-b border-outline-variant/10">
+<h3 class="font-headline font-bold text-lg text-on-surface">Ordens de Serviço Recentes</h3>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest rounded-lg text-sm text-on-surface hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-sm">filter_list</span> Filtrar</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary-container text-primary text-sm font-semibold rounded-lg hover:bg-primary/20 transition-colors"><span class="material-symbols-outlined text-sm">add</span> Nova Ordem</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-bright/10 text-on-surface-variant text-[10px] uppercase tracking-[0.15em] font-bold">
+<th class="px-6 py-4">ID da Ordem</th>
+<th class="px-6 py-4">Ativo / Equipamento</th>
+<th class="px-6 py-4">Técnico</th>
+<th class="px-6 py-4">Prioridade</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Iniciado em</th>
+<th class="px-6 py-4 text-right">Ação</th>
+</tr>
+</thead>
+<tbody class="text-sm font-body">
+<!-- Row 1: In Progress -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-xs text-primary font-bold">#OS-88219</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Cnc-Lathe System A1</span>
+<span class="text-[10px] text-on-surface-variant">Manutenção: Superaquecimento do Eixo</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<img alt="Technician" class="w-6 h-6 rounded-full" data-alt="Close up face of a male industrial technician wearing a yellow safety helmet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYlK7dLEk-DpZCL5jAUKKcdcsGGRKyVmWstb27tYB8MXLcZ6bSKsttWalQJNGAjDI8Q5166FuJYoWtG0vl8MA1Ll1xTB9MorrTiMMpQgzbc_AYdbux0pK4mRqWPFyFUjoXuWNRyb0SlB0qb6j8-KKmQn5R12F2uHHLh0uoDLmOSM3PZpMV5CkfSHlc9Qll86kUE-NEAaWvYr048Y6IZhQn1cK6V1apSzsEwyb7NBz_FIlqiFK_zqwB1v1IcvvTUMMJHYRKZofHJbQ"/>
+<span class="text-xs">Ricardo Silva</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-[11px] uppercase">Alta</span>
+</span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-primary-container text-on-primary-container rounded status-badge">Em Andamento</span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant text-xs">Hoje, 08:34</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="open_in_new">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Critical -->
+<tr class="bg-surface-container-lowest/30 hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-xs text-primary font-bold">#OS-88220</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Power Grid Terminal 4</span>
+<span class="text-[10px] text-on-surface-variant">Emergência: Flutuações de Tensão</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">AM</div>
+<span class="text-xs">Aline Mendes</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+<span class="font-bold text-[11px] uppercase">Crítica</span>
+</span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-error-container text-on-error-container rounded status-badge">Crítico</span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant text-xs">Hoje, 09:12</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="open_in_new">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Waiting Parts -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-xs text-primary font-bold">#OS-88215</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Hydraulic Press 12-Ton</span>
+<span class="text-[10px] text-on-surface-variant">Reparo: Substituição de Vedação</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<img alt="Technician" class="w-6 h-6 rounded-full" data-alt="Close up face of a male manufacturing specialist in a professional setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRv1hhyGwN2ym2wvWXJDVS8YEJMAuggPBu7C0NXj2liRQuDH4mJiCwpuH8lq5sdm77q0Ieey38uOa7yo-WgW-nWGSJ9i8w6OSh_-fZ-Ks5cnUJvVzmX993DLVzaogV2Ued9339s1GPMHaaY-vm5jQTHWpB0erfMPMWlw2JnUTBOAQV8TsisxW96WtpLNjotS61yqhFh-sh03pjBse2e2SPRvmOPFyvvgoIhpKf6rd-xrBFq1Oqc93tcEwI7qsDUNQGWeR41fbTTcg"/>
+<span class="text-xs">Carlos Porto</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-xs">horizontal_rule</span>
+<span class="font-bold text-[11px] uppercase">Normal</span>
+</span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-tertiary-container text-on-tertiary-container rounded status-badge">Aguardando Peças</span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant text-xs">Ontem, 14:45</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="open_in_new">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Open -->
+<tr class="bg-surface-container-lowest/30 hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-xs text-primary font-bold">#OS-88225</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Conveyor Belt S-4</span>
+<span class="text-[10px] text-on-surface-variant">Verificação: Vibração Incomum</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs text-on-surface-variant italic">Não Atribuído</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-xs">horizontal_rule</span>
+<span class="font-bold text-[11px] uppercase">Normal</span>
+</span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container rounded status-badge">Aberta</span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant text-xs">Agora</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="open_in_new">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Completed -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-xs text-primary font-bold">#OS-88190</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Cooling Fan B-9</span>
+<span class="text-[10px] text-on-surface-variant">Preventiva: Lubrificação Periódica</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">JV</div>
+<span class="text-xs">João Victor</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-xs">low_priority</span>
+<span class="font-bold text-[11px] uppercase">Baixa</span>
+</span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-green-900/30 text-green-400 rounded status-badge">Concluída</span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant text-xs">Ontem, 10:15</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="open_in_new">open_in_new</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 flex justify-between items-center bg-surface-bright/5 border-t border-outline-variant/10">
+<p class="text-xs text-on-surface-variant">Exibindo 5 de 124 ordens de serviço</p>
+<div class="flex gap-2">
+<button class="p-2 rounded hover:bg-surface-container-highest transition-colors disabled:opacity-30" disabled=""><span class="material-symbols-outlined text-sm">filter_list</span> Filtrar</button>
+<button class="p-2 rounded bg-primary-container text-primary font-bold text-xs px-3">1</button>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface text-xs px-3">2</button>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface text-xs px-3">3</button>
+<button class="p-2 rounded hover:bg-surface-container-highest transition-colors"><span class="material-symbols-outlined text-sm">add</span> Nova Ordem</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Contextual FAB for Main Dashboard -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-2xl" data-icon="add" style="font-variation-settings: 'wght' 600;">add</span>
+</button>
