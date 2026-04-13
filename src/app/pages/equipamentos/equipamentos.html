@@ -1,0 +1,235 @@
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-100 font-manrope tracking-tight">IndustrialForeman</span>
+<div class="hidden md:flex gap-6 items-center">
+<span class="text-slate-400 font-inter text-sm cursor-pointer hover:bg-slate-800/30 px-3 py-2 transition-all">Visão Geral</span>
+<span class="text-blue-400 font-semibold font-inter text-sm cursor-pointer px-3 py-2">Inventário</span>
+<span class="text-slate-400 font-inter text-sm cursor-pointer hover:bg-slate-800/30 px-3 py-2 transition-all">Logística</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-slate-800/40 rounded-lg">
+<span class="material-symbols-outlined text-slate-400 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-slate-200 placeholder:text-slate-500 w-48" placeholder="Pesquisa Global" type="text"/>
+</div>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer active:scale-95 duration-150 hover:text-blue-400">notifications</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer active:scale-95 duration-150 hover:text-blue-400">settings</span>
+<div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-700">
+<img alt="Chief Engineer Profile" data-alt="close-up portrait of a professional industrial engineer wearing a subtle dark navy uniform in a high-tech facility" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6v3-kd7TknPggYqS0oZZEMdgTsLPSTMQaeujJ8TJwty6UQ_623DFLLhSCU55R7sEE6rsYYmBFijoH4az46Q6uxHcrlt6iyI3UBfY2LGoYBJXHKbiYwdt3NdJvfnsa1wazt60EadZNMwLQZTvTQ-uFxgb1n83TpwlB5FoTyWlJlJ6n1VPn6QU2VCVZ2_ruY6vqyvBv0uj9UngpNUWy6OnTr1SCfTLMlo6z_FeP1TGlUixfdxdIrUOl7QvLr6i-aC3FOH1FzsL16kI"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<!-- Main Content Canvas -->
+<!-- Header Section (Editorial Layout) -->
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- Table Section (Asymmetric Primary Column) -->
+<div class="col-span-12 lg:col-span-8">
+<div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/15">
+<div class="bg-surface-bright/20 px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="font-headline font-bold text-sm tracking-widest uppercase opacity-70">Manifesto da Frota</span>
+<span class="bg-primary-container text-on-primary-container text-[10px] px-2 py-0.5 rounded font-bold">124 TOTAL</span>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">filter_list</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">more_vert</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest">
+<th class="px-6 py-4 font-headline text-xs font-bold text-on-surface-variant uppercase tracking-widest">Código</th>
+<th class="px-6 py-4 font-headline text-xs font-bold text-on-surface-variant uppercase tracking-widest">Nome do Ativo</th>
+<th class="px-6 py-4 font-headline text-xs font-bold text-on-surface-variant uppercase tracking-widest">Categoria</th>
+<th class="px-6 py-4 font-headline text-xs font-bold text-on-surface-variant uppercase tracking-widest">Localização</th>
+<th class="px-6 py-4 font-headline text-xs font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 font-headline text-xs font-bold text-on-surface-variant uppercase tracking-widest"></th>
+</tr>
+</thead>
+<tbody class="font-body text-sm">
+<!-- Row 1 -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-primary font-semibold">PRC-992-X</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">CNC Machining Center v4</span>
+<span class="text-xs text-on-surface-variant">Última Manut: 12 Out, 2023</span>
+</div>
+</td>
+<td class="px-6 py-5"><span class="text-on-surface-variant">Produção</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-outline">location_on</span> Setor B-12</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center w-fit gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Ativo</span>
+</td>
+<td class="px-6 py-5 text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">edit</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-primary font-semibold">HYD-041-A</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Hydraulic Press 500T</span>
+<span class="text-xs text-on-surface-variant">Falha no Sensor: 02h atrás</span>
+</div>
+</td>
+<td class="px-6 py-5"><span class="text-on-surface-variant">Montagem</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-outline">location_on</span> Setor A-04</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center w-fit gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Aguardando Peças</span>
+</td>
+<td class="px-6 py-5 text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">edit</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="bg-surface-container-low hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-primary font-semibold">ROB-772-K</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Kuka Robotic Arm XL</span>
+<span class="text-xs text-on-surface-variant">Eficiência Ideal</span>
+</div>
+</td>
+<td class="px-6 py-5"><span class="text-on-surface-variant">Robótica</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-outline">location_on</span> Setor C-01</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center w-fit gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Em Progresso</span>
+</td>
+<td class="px-6 py-5 text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">edit</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-mono text-primary font-semibold">CON-102-M</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface">Main Conveyor Belt</span>
+<span class="text-xs text-on-surface-variant">Offline Agendado</span>
+</div>
+</td>
+<td class="px-6 py-5"><span class="text-on-surface-variant">Logística</span></td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-outline">location_on</span> Doca 05</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center w-fit gap-1"><span class="w-1.5 h-1.5 rounded-full bg-error"></span> Crítico</span>
+</td>
+<td class="px-6 py-5 text-right opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary">edit</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Side Form Section (Focus Drawer Style) -->
+<div class="col-span-12 lg:col-span-4 sticky top-24">
+<div class="bg-surface-container-high rounded-xl p-8 border border-outline-variant/15 shadow-2xl relative overflow-hidden">
+<!-- Glass Background Texture -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<h3 class="text-2xl font-bold font-headline text-on-surface mb-6 flex items-center gap-2"><span class="material-symbols-outlined text-primary" data-weight="fill">precision_manufacturing</span> Perfil do Ativo</h3>
+<form class="space-y-6">
+<div>
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2">Código do Equipamento *</label>
+<input class="w-full bg-surface-container-highest border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary/30 transition-all font-mono placeholder:text-outline/50" placeholder="e.g. ABC-123-D" type="text" value="PRC-992-X"/>
+</div>
+<div>
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2">Código do Equipamento *</label>
+<input class="w-full bg-surface-container-highest border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary/30 transition-all font-body placeholder:text-outline/50" placeholder="Asset Name" type="text" value="CNC Machining Center v4"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2">Mapeamento de Localização *</label>
+<div class="relative">
+<select class="w-full bg-surface-container-highest border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary/30 transition-all font-body appearance-none">
+<option>Nível 01 (Alta)</option>
+<option>Nível 02</option>
+<option>Nível 03</option>
+<option>Utilidades</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2">Mapeamento de Localização *</label>
+<div class="relative">
+<select class="w-full bg-surface-container-highest border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary/30 transition-all font-body appearance-none">
+<option>Nível 01 (Alta)</option>
+<option>Nível 02</option>
+<option>Nível 03</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-2">Código do Equipamento *</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">explore</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg p-4 pl-12 text-on-surface focus:ring-2 focus:ring-primary/30 transition-all font-body" placeholder="Zone/Building" type="text" value="Sector B-12"/>
+</div>
+</div>
+<div class="pt-4 flex flex-col gap-3">
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-bold shadow-lg hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-2" type="submit"><span class="material-symbols-outlined text-sm">save</span> Atualizar Registro da Frota</button>
+<button class="w-full border border-outline-variant text-on-surface-variant py-4 rounded-lg font-semibold hover:bg-surface-bright transition-colors" type="button">Redefinir Alterações</button>
+</div>
+</form>
+<!-- Validation Hint -->
+<div class="mt-6 flex items-start gap-3 p-4 bg-error-container/10 rounded-lg border-l-2 border-error">
+<span class="material-symbols-outlined text-error text-lg">info</span>
+<p class="text-xs text-on-error-container font-body leading-relaxed"><span class="font-bold block mb-1">Campos Obrigatórios Necessários</span> Certifique-se de que Código, Nome e Localização estejam mapeados com precisão no esquema global da fábrica.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Insights (Bento Grid Style) -->
+<section class="mt-16">
+<h2 class="text-sm font-bold font-headline tracking-[0.2em] text-outline uppercase mb-6">Diagnóstico de Saúde dos Ativos</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- KPI Card 1 -->
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 hover:bg-surface-container-highest transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-3 rounded-lg">bolt</span>
+<span class="text-green-400 font-bold text-xs">+12% vs ano ant.</span>
+</div>
+<p class="text-on-surface-variant font-label text-xs uppercase font-bold mb-1">Tempo de Atividade Operacional</p>
+<h3 class="text-4xl font-headline font-extrabold text-on-surface">98.4<span class="text-lg font-medium opacity-50">%</span></h3>
+</div>
+<!-- KPI Card 2 -->
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 hover:bg-surface-container-highest transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-tertiary bg-tertiary/10 p-3 rounded-lg">build</span>
+<span class="text-on-surface-variant font-bold text-xs">8 Pendentes</span>
+</div>
+<p class="text-on-surface-variant font-label text-xs uppercase font-bold mb-1">8 Pendentes</p>
+<h3 class="text-4xl font-headline font-extrabold text-on-surface">142<span class="text-lg font-medium opacity-50">hrs</span></h3>
+</div>
+<!-- KPI Card 3 -->
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10 hover:bg-surface-container-highest transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-error bg-error/10 p-3 rounded-lg">-2 Eventos de Segurança</span>
+<span class="text-error font-bold text-xs">-2 Eventos de Segurança</span>
+</div>
+<p class="text-on-surface-variant font-label text-xs uppercase font-bold mb-1">Índice de Fator de Risco</p>
+<h3 class="text-4xl font-headline font-extrabold text-on-surface">0.02<span class="text-lg font-medium opacity-50">μ</span></h3>
+</div>
+</div>
+</section>
+<!-- FAB for quick action (Conditional Suppression logic) -->
+<!-- Hidden on settings/details but shown on management screen as secondary trigger -->
+<button class="fixed bottom-10 right-10 bg-primary w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-on-primary hover:scale-110 active:scale-95 transition-all md:hidden">
+<span class="material-symbols-outlined">add</span>
+</button>

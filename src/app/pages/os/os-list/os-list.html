@@ -1,0 +1,204 @@
+<!-- TopNavBar -->
+<!-- SideNavBar -->
+<!-- Main Content Canvas -->
+<div class="max-w-7xl mx-auto">
+<!-- Header Section with Asymmetry -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
+<div class="max-w-xl">
+<span class="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">Portal de Gerenciamento</span>
+<h2 class="text-4xl font-headline font-extrabold text-on-surface tracking-tight leading-none mb-3">Ordens de Serviço</h2>
+<p class="text-on-surface-variant font-body leading-relaxed">Não conseguimos encontrar nenhum registro de manutenção correspondente à sua seleção de filtros atual. Tente ajustar os filtros de prioridade ou status.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-high text-on-surface-variant px-5 py-2.5 rounded-lg flex items-center gap-2 hover:bg-surface-container-highest transition-colors active:scale-95 text-sm font-medium"><span class="material-symbols-outlined text-[20px]">file_download</span> Exportar Dados</button>
+<button class="bg-gradient-to-br from-primary to-on-primary-container text-on-primary px-6 py-2.5 rounded-lg flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 text-sm font-bold shadow-lg shadow-primary/10"><span class="material-symbols-outlined text-[20px]">add</span> Criar Ordem</button>
+</div>
+</div>
+<!-- Filter Controls - High Contrast Glassmorphism Tier -->
+<div class="bg-surface-container-low rounded-xl p-6 mb-8 border border-outline-variant/10 shadow-xl">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+<!-- Search inside filters for mobile -->
+<div class="md:hidden flex items-center bg-surface-container-highest px-4 py-3 rounded-lg gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-full" placeholder="SO-782, Turbines..." type="text"/>
+</div>
+<!-- Filter 1: Status -->
+<div class="flex flex-col gap-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest ml-1">Status do Ciclo de Vida</label>
+<select class="bg-surface-container-highest border-none text-on-surface text-sm rounded-lg focus:ring-2 focus:ring-primary h-12 px-4 cursor-pointer"><option>Todos os Status</option><option>Aberto</option><option>Em Andamento</option><option>Aguardando Peças</option><option>Concluído</option></select>
+</div>
+<!-- Filter 2: Priority -->
+<div class="flex flex-col gap-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest ml-1">Prioridade Operacional</label>
+<select class="bg-surface-container-highest border-none text-on-surface text-sm rounded-lg focus:ring-2 focus:ring-primary h-12 px-4 cursor-pointer"><option>Todas as Prioridades</option><option>Crítica</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+</div>
+<!-- Filter 3: Date Range -->
+<div class="flex flex-col gap-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest ml-1">Período</label>
+<div class="bg-surface-container-highest flex items-center rounded-lg h-12 px-4 gap-3 text-on-surface-variant cursor-pointer hover:bg-surface-container-highest/80 transition-colors">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span class="text-sm">Últimos 30 Dias</span>
+<span class="material-symbols-outlined text-sm ml-auto">expand_more</span>
+</div>
+</div>
+<!-- Reset / Apply Action -->
+<div class="flex items-end h-full">
+<button class="w-full h-12 text-primary font-bold text-xs uppercase tracking-widest border border-primary/20 rounded-lg hover:bg-primary/5 transition-all">Limpar Todos os Filtros</button>
+</div>
+</div>
+</div>
+<!-- Table Section - Machined Depth -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-2xl">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-bright/50">
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Número da Ordem</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Equipamento</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Tipo</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-center">Prioridade</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Data de Solicitação</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: In Progress -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-headline font-bold text-primary">#SO-98210</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold text-sm">Main Turbine A-01</span>
+<span class="text-on-surface-variant text-xs">Generator Unit 4</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded text-[11px] font-bold uppercase tracking-tight">Preventiva</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<span class="flex items-center gap-1.5 text-error font-bold text-xs uppercase"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span> Crítica</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-primary-container text-primary px-3 py-1.5 rounded-full text-[11px] font-extrabold uppercase border border-primary/20">Em Andamento</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Waiting Parts -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-headline font-bold text-primary">#SO-98214</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold text-sm">Conveyor System 12</span>
+<span class="text-on-surface-variant text-xs">Packaging Line</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded text-[11px] font-bold uppercase tracking-tight">Corretiva</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<span class="text-tertiary font-bold text-xs uppercase">Alta</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-tertiary-container text-tertiary px-3 py-1.5 rounded-full text-[11px] font-extrabold uppercase border border-tertiary/20">Aguardando Peças</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Oct 23, 2023</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Completed -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-5 font-headline font-bold text-primary">#SO-98199</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold text-sm">Industrial Boiler Unit</span>
+<span class="text-on-surface-variant text-xs">Thermal Plant</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded text-[11px] font-bold uppercase tracking-tight">Inspeção</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<span class="text-on-surface-variant font-bold text-xs uppercase">Baixa</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-full text-[11px] font-extrabold uppercase border border-emerald-500/20">Concluído</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Oct 21, 2023</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination / Table Footer -->
+<div class="p-6 bg-surface-container-lowest flex items-center justify-between border-t border-outline-variant/10">
+<p class="text-xs text-on-surface-variant font-medium">Não conseguimos encontrar nenhum registro de manutenção correspondente à sua seleção de filtros atual. Tente ajustar os filtros de prioridade ou status.</p>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-on-primary font-bold text-sm">1</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors font-medium text-sm">2</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors font-medium text-sm">3</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty State (Hidden by default, shown here for visual demo of the prompt) -->
+<div class="hidden mt-12 bg-surface-container-low/50 border-2 border-dashed border-outline-variant/20 rounded-2xl py-24 px-6 text-center flex flex-col items-center">
+<div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center mb-6 shadow-inner">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant">search_off</span>
+</div>
+<h3 class="text-2xl font-headline font-bold text-on-surface mb-2 tracking-tight">Nenhuma Ordem de Serviço Encontrada</h3>
+<p class="text-on-surface-variant max-w-sm mx-auto mb-8 font-body">Não conseguimos encontrar nenhum registro de manutenção correspondente à sua seleção de filtros atual. Tente ajustar os filtros de prioridade ou status.</p>
+<button class="bg-surface-container-highest text-primary px-8 py-3 rounded-lg font-bold text-sm hover:brightness-110 transition-all active:scale-95">Limpar Configuração de Filtros</button>
+</div>
+</div>
+<!-- Bottom Navigation for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-slate-900 h-16 flex items-center justify-around z-50">
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-[10px] font-medium">Início</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-blue-400">
+<span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
+<span class="text-[10px] font-bold">Ordens</span>
+</button>
+<div class="relative -top-5">
+<button class="w-12 h-12 rounded-full bg-blue-500 shadow-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="text-[10px] font-medium">Estoque</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">engineering</span>
+<span class="text-[10px] font-medium">Equipe</span>
+</button>
+</nav>
+<!-- Contextual FAB (Only for list view) -->
+<button class="fixed right-8 bottom-8 md:flex hidden bg-primary text-on-primary p-5 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all z-40 group">
+<span class="material-symbols-outlined text-3xl">add_box</span>
+<span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 font-bold text-sm ml-0 group-hover:ml-3 whitespace-nowrap">Criar Nova OS</span>
+</button>
