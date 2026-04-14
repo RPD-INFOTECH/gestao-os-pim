@@ -45,7 +45,6 @@ export interface CreateOrdemServicoDto {
   tipo_manutencao: TipoManutencao;
   prioridade: Prioridade;
   descricao_falha: string;
-  solicitanteId?: string;
 }
 
 export interface ConcluirOrdemServicoDto {

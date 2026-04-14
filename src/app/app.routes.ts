@@ -15,6 +15,7 @@ import { Forbidden } from './pages/errors/forbidden/forbidden';
 import { NotFound } from './pages/errors/not-found/not-found';
 import { authGuard } from './core/auth/auth.guard';
 import { roleGuard } from './core/auth/role.guard';
+import { pendingChangesGuard } from './core/guards/pending-changes.guard';
 import { Perfil } from './core/models/perfil.enum';
 
 export const routes: Routes = [
@@ -35,6 +36,7 @@ export const routes: Routes = [
         path: 'ordens-de-servico/nova',
         component: NovaOs,
         canActivate: [roleGuard(Perfil.SOLICITANTE, Perfil.SUPERVISOR)],
+        canDeactivate: [pendingChangesGuard],
       },
       {
         path: 'ordens-de-servico/:id',
@@ -45,12 +47,12 @@ export const routes: Routes = [
       {
         path: 'equipamentos/novo',
         component: EquipamentoForm,
-        canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.TECNICO)],
+        canActivate: [roleGuard(Perfil.SUPERVISOR)],
       },
       {
         path: 'equipamentos/:id',
         component: EquipamentoForm,
-        canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.TECNICO)],
+        canActivate: [roleGuard(Perfil.SUPERVISOR)],
       },
 
       {

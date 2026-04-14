@@ -10,7 +10,6 @@ import { Perfil } from '../../core/models/perfil.enum';
   selector: 'app-dashboard',
   imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
   private service = inject(OrdemServicoService);
@@ -33,6 +32,21 @@ export class Dashboard implements OnInit {
   });
 
   abertas = computed(() => this.scoped().filter((o) => o.status === StatusOs.ABERTA).length);
+  abertasHoje = computed(() => {
+    const hoje = new Date();
+    return this.scoped().filter((o) => {
+      if (o.status !== StatusOs.ABERTA) {
+        return false;
+      }
+
+      const abertura = new Date(o.abertura_em);
+      return (
+        abertura.getFullYear() === hoje.getFullYear() &&
+        abertura.getMonth() === hoje.getMonth() &&
+        abertura.getDate() === hoje.getDate()
+      );
+    }).length;
+  });
   emAndamento = computed(() => this.scoped().filter((o) => o.status === StatusOs.EM_ANDAMENTO).length);
   aguardandoPeca = computed(() => this.scoped().filter((o) => o.status === StatusOs.AGUARDANDO_PECA).length);
   concluidas = computed(() => this.scoped().filter((o) => o.status === StatusOs.CONCLUIDA).length);
@@ -41,6 +55,33 @@ export class Dashboard implements OnInit {
       (o) => o.prioridade === Prioridade.CRITICA && o.status !== StatusOs.CONCLUIDA && o.status !== StatusOs.CANCELADA,
     ).length,
   );
+
+  tempoMedioConclusaoHoras = computed(() => {
+    const agora = new Date();
+    const ha30Dias = new Date(agora);
+    ha30Dias.setDate(agora.getDate() - 30);
+
+    const concluidasRecentes = this.scoped().filter((o) => {
+      if (!o.conclusao_em) {
+        return false;
+      }
+
+      const conclusao = new Date(o.conclusao_em);
+      return conclusao >= ha30Dias;
+    });
+
+    if (!concluidasRecentes.length) {
+      return null;
+    }
+
+    const totalHoras = concluidasRecentes.reduce((acc, ordem) => {
+      const abertura = new Date(ordem.abertura_em);
+      const conclusao = new Date(ordem.conclusao_em!);
+      return acc + (conclusao.getTime() - abertura.getTime()) / (1000 * 60 * 60);
+    }, 0);
+
+    return totalHoras / concluidasRecentes.length;
+  });
 
   recentes = computed(() => this.scoped().slice(0, 5));
 
@@ -70,6 +111,19 @@ export class Dashboard implements OnInit {
         return 'bg-green-900/40 text-green-400';
       case StatusOs.CANCELADA:
         return 'bg-slate-800 text-slate-500';
+    }
+  }
+
+  prioridadeClass(prioridade: Prioridade): string {
+    switch (prioridade) {
+      case Prioridade.CRITICA:
+        return 'text-red-400';
+      case Prioridade.ALTA:
+        return 'text-orange-400';
+      case Prioridade.MEDIA:
+        return 'text-yellow-400';
+      case Prioridade.BAIXA:
+        return 'text-slate-400';
     }
   }
 }
