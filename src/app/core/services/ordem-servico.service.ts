@@ -6,6 +6,7 @@ import {
   ConcluirOrdemServicoDto,
   CreateOrdemServicoDto,
   OrdemServico,
+  Prioridade,
   StatusOs,
 } from '../models/ordem-servico.model';
 
@@ -14,8 +15,12 @@ export class OrdemServicoService {
   private http = inject(HttpClient);
   private base = `${environment.apiUrl}/ordens-servico`;
 
-  list(params?: { status?: StatusOs; prioridade?: string }): Observable<OrdemServico[]> {
-    return this.http.get<OrdemServico[]>(this.base, { params: params as any });
+  list(params?: { status?: StatusOs; prioridade?: Prioridade; busca?: string }): Observable<OrdemServico[]> {
+    const sanitized = Object.fromEntries(
+      Object.entries(params ?? {}).filter(([, value]) => value !== undefined && value !== null && value !== '')
+    );
+
+    return this.http.get<OrdemServico[]>(this.base, { params: sanitized as any });
   }
 
   getById(id: string): Observable<OrdemServico> {

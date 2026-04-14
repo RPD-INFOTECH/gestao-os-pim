@@ -1,0 +1,48 @@
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-slate-900 flex flex-col py-8 px-4 gap-2 font-inter text-sm">
+  <div class="mb-10 px-4">
+    <h2 class="text-white font-headline font-bold text-xl tracking-tight">ServiçoPIM</h2>
+    <p class="text-slate-400 text-xs mt-1">Terminal Manaus</p>
+    @if (perfil()) {
+      <div class="mt-4 p-3 bg-slate-800/50 rounded-lg">
+        <p class="text-blue-400 font-semibold text-xs">Perfil: {{ perfil() }}</p>
+      </div>
+    }
+  </div>
+
+  <nav class="flex-1 flex flex-col gap-1">
+    @for (item of menu(); track item.link) {
+      <a
+        [routerLink]="item.link"
+        routerLinkActive="text-blue-400 bg-slate-800/50 rounded-r-lg border-l-4 border-blue-500"
+        #rla="routerLinkActive"
+        [class.text-slate-400]="!rla.isActive"
+        class="flex items-center gap-3 py-3 px-4 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all"
+      >
+        <span class="material-symbols-outlined">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="mt-auto border-t border-slate-800 pt-6">
+    <button
+      (click)="logout()"
+      class="w-full flex items-center gap-3 py-3 px-4 text-slate-400 hover:text-slate-200 hover:bg-slate-800/30 cursor-pointer transition-all text-left"
+    >
+      <span class="material-symbols-outlined">logout</span>
+      <span>Sair</span>
+    </button>
+  </div>
+</aside>
+
+<header class="fixed top-0 right-0 left-64 z-50 bg-slate-900/60 backdrop-blur-xl h-16 flex justify-end items-center px-8 shadow-sm">
+  <div class="flex items-center gap-3">
+    <div class="text-right">
+      <p class="text-xs font-bold text-slate-100">{{ user()?.nome || 'Usuário' }}</p>
+      <p class="text-[10px] text-blue-400 font-semibold tracking-wider">{{ perfil() || '' }}</p>
+    </div>
+    <div class="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-slate-300 font-bold">
+      {{ (user()?.nome || '?').charAt(0) }}
+    </div>
+  </div>
+</header>
