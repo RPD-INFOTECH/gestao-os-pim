@@ -15,7 +15,6 @@ import { Perfil } from '../../../core/models/perfil.enum';
   selector: 'app-os-details',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './os-details.html',
-  styleUrl: './os-details.css',
 })
 export class OsDetails implements OnInit {
   private osService = inject(OrdemServicoService);

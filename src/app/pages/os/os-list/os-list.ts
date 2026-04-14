@@ -11,7 +11,6 @@ import { Perfil } from '../../../core/models/perfil.enum';
   selector: 'app-os-list',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './os-list.html',
-  styleUrl: './os-list.css',
 })
 export class OsList implements OnInit {
   private service = inject(OrdemServicoService);
@@ -24,6 +23,7 @@ export class OsList implements OnInit {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  filtroBusca = signal('');
   filtroStatus = signal<StatusOs | ''>('');
   filtroPrioridade = signal<Prioridade | ''>('');
 
@@ -46,11 +46,6 @@ export class OsList implements OnInit {
       list = list.filter((o) => o.tecnico?.id === userId);
     }
 
-    const s = this.filtroStatus();
-    const pr = this.filtroPrioridade();
-    if (s) list = list.filter((o) => o.status === s);
-    if (pr) list = list.filter((o) => o.prioridade === pr);
-
     return list;
   });
 
@@ -61,7 +56,11 @@ export class OsList implements OnInit {
   load(): void {
     this.loading.set(true);
     this.error.set(null);
-    this.service.list().subscribe({
+    this.service.list({
+      status: this.filtroStatus() || undefined,
+      prioridade: this.filtroPrioridade() || undefined,
+      busca: this.filtroBusca().trim() || undefined,
+    }).subscribe({
       next: (data) => {
         this.ordens.set(data);
         this.loading.set(false);
@@ -71,6 +70,17 @@ export class OsList implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  onFilterChange(): void {
+    this.load();
+  }
+
+  clearFilters(): void {
+    this.filtroBusca.set('');
+    this.filtroStatus.set('');
+    this.filtroPrioridade.set('');
+    this.load();
   }
 
   statusClass(status: StatusOs): string {

@@ -10,7 +10,6 @@ import { Perfil } from '../../core/models/perfil.enum';
   selector: 'app-equipamentos',
   imports: [CommonModule, RouterLink],
   templateUrl: './equipamentos.html',
-  styleUrl: './equipamentos.css',
 })
 export class Equipamentos implements OnInit {
   private service = inject(EquipamentoService);
@@ -20,10 +19,7 @@ export class Equipamentos implements OnInit {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  canEdit = computed(() => {
-    const p = this.auth.currentPerfil();
-    return p === Perfil.SUPERVISOR || p === Perfil.TECNICO;
-  });
+  canEdit = computed(() => this.auth.currentPerfil() === Perfil.SUPERVISOR);
   canDelete = computed(() => this.auth.currentPerfil() === Perfil.SUPERVISOR);
 
   ngOnInit(): void {
@@ -46,10 +42,10 @@ export class Equipamentos implements OnInit {
   }
 
   onDelete(e: Equipamento): void {
-    if (!confirm(`Excluir equipamento "${e.nome}"?`)) return;
+    if (!confirm(`Desativar equipamento "${e.nome}"?`)) return;
     this.service.delete(e.id).subscribe({
       next: () => this.load(),
-      error: () => alert('Falha ao excluir equipamento.'),
+      error: () => alert('Falha ao desativar equipamento.'),
     });
   }
 }

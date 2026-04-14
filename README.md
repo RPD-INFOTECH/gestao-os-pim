@@ -1,59 +1,134 @@
-# ServPim
+# ServiçoPIM Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+Frontend do sistema de gestão de ordens de serviço do projeto ServiçoPIM.
 
-## Development server
+Stack principal:
+- Angular 21
+- TypeScript
+- Tailwind CSS
 
-To start a local development server, run:
+Este projeto consome a API do backend em `servicoPim-API` e cobre o fluxo principal de autenticação, dashboard, ordens de serviço, equipamentos, usuários, histórico e relatórios.
 
-```bash
-ng serve
-```
+## Requisitos
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js 22
+- npm
+- Backend do projeto rodando em `http://localhost:9090`
 
-## Code scaffolding
+## Como executar
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Na raiz do projeto:
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+O frontend sobe em:
 
-To build the project run:
-
-```bash
-ng build
+```text
+http://localhost:4200
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Integração com o backend
 
-## Running unit tests
+Durante o desenvolvimento, o Angular usa proxy para encaminhar chamadas da interface para a API.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+O arquivo responsável por isso é:
 
-```bash
-ng test
+- [`proxy.conf.json`](./proxy.conf.json)
+
+Rotas proxied atualmente:
+- `/auth`
+- `/usuarios`
+- `/equipamentos`
+- `/ordens-servico`
+- `/historico-os`
+
+Isso permite chamar a API com caminhos relativos no frontend sem lidar com CORS manualmente no ambiente local.
+
+## Scripts
+
+- `npm start`: inicia o servidor de desenvolvimento
+- `npm run build`: gera o build de produção
+- `npm run watch`: build em modo watch
+- `npm test`: executa os testes configurados no projeto
+
+## Estrutura
+
+```text
+src/
+  app/
+    app.ts
+    app.routes.ts
+    app.config.ts
+    core/
+      auth/
+      guards/
+      models/
+      services/
+    layouts/
+      main-layout/
+    pages/
+      dashboard/
+      equipamentos/
+      errors/
+      historico/
+      login/
+      os/
+      relatorios/
+      usuarios/
+    shared/
+      navbar/
+  environments/
+  main.ts
+  styles.css
 ```
 
-## Running end-to-end tests
+### Organização das pastas
 
-For end-to-end (e2e) testing, run:
+- `core/auth`: autenticação, guards e interceptor
+- `core/guards`: guards auxiliares, como proteção de formulário com alterações pendentes
+- `core/models`: interfaces, DTOs e enums usados pela aplicação
+- `core/services`: comunicação HTTP com o backend
+- `layouts`: moldura das áreas autenticadas
+- `pages`: telas da aplicação
+- `shared`: componentes reutilizáveis
 
-```bash
-ng e2e
-```
+## Fluxo da aplicação
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+1. `main.ts` inicializa a aplicação Angular
+2. `app.config.ts` registra router, `HttpClient` e interceptor
+3. `app.ts` renderiza o `router-outlet` raiz
+4. `app.routes.ts` decide se entra em `/login` ou no layout autenticado
+5. `MainLayout` renderiza o `Navbar` e um `router-outlet` interno
+6. A página atual chama os services de `core/services`
+7. O interceptor adiciona o token JWT nas requisições protegidas
 
-## Additional Resources
+## Rotas principais
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `/login`
+- `/dashboard`
+- `/ordens-de-servico`
+- `/ordens-de-servico/nova`
+- `/ordens-de-servico/:id`
+- `/equipamentos`
+- `/equipamentos/novo`
+- `/equipamentos/:id`
+- `/usuarios`
+- `/usuarios/novo`
+- `/usuarios/:id`
+- `/historico`
+- `/relatorios`
+
+## Regras já refletidas no frontend
+
+- login com email e senha
+- logout pela navegação compartilhada
+- rotas protegidas por autenticação
+- rotas protegidas por perfil
+- formulário de nova OS com proteção contra saída sem salvar
+- filtro de OS por status e prioridade
+- busca de OS por número ou descrição
+- dashboard com métricas baseadas nos dados da API
+- gestão de equipamentos restrita ao perfil de supervisor
