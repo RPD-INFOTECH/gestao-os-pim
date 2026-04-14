@@ -21,14 +21,24 @@ interface AuthState {
   accessToken: string | null;
 }
 
-// Define o formato esperado da resposta do backend ao autenticar/renovar.
+// Define o formato esperado da resposta do backend ao autenticar.
 interface LoginResponse {
-  // Token de acesso (curta duracao).
   accessToken: string;
-  // Token de refresh (maior duracao).
   refreshToken: string;
-  // Dados do usuario autenticado.
   usuario: Usuario;
+}
+
+// Refresh devolve apenas tokens (sem dados do usuario).
+interface RefreshResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+// Formato do payload do JWT de acesso emitido pelo backend.
+interface AccessTokenPayload {
+  sub: string;
+  email: string;
+  perfil: Perfil;
 }
 
 // Chave usada para salvar o refresh token no localStorage.
@@ -58,37 +68,61 @@ export class AuthService {
   // Faz login enviando email e senha e devolve o Observable da resposta.
   // O backend espera o campo 'senha' (nao 'password').
   login(email: string, senha: string): Observable<LoginResponse> {
-    // Faz POST para o endpoint de login da API.
     return this.http
       .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { email, senha })
       .pipe(
-        // Executa efeitos colaterais quando a resposta chegar.
         tap((res) => {
-          // Mostra a resposta no console para depuracao.
-          console.log(res);
-          // Salva o refresh token no localStorage.
           localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
-          // Atualiza o estado com o usuario e o access token.
           this.state.set({ usuario: res.usuario, accessToken: res.accessToken });
         }),
       );
   }
 
   // Renova o access token usando o refresh token salvo.
-  refresh(): Observable<LoginResponse> {
-    // Le o refresh token do localStorage (ou string vazia se nao existir).
+  // O backend devolve apenas tokens, por isso reconstruimos os dados do
+  // usuario a partir do payload do proprio access token (sub/email/perfil).
+  refresh(): Observable<RefreshResponse> {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY) ?? '';
 
-    // Faz POST para o endpoint de refresh da API enviando o token no body.
     return this.http
-      .post<LoginResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken })
+      .post<RefreshResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken })
       .pipe(
-        // Atualiza o refresh token salvo se o backend devolver um novo.
         tap((res) => {
-          // Salva o novo refresh token.
           localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
+          const payload = this.decodeJwt(res.accessToken);
+          const usuario: Usuario | null = payload
+            ? {
+                id: payload.sub,
+                nome: '',
+                email: payload.email,
+                matricula: '',
+                perfil: payload.perfil,
+                setor: null,
+                ativo: true,
+                created_at: '',
+              }
+            : this.state().usuario;
+          this.state.set({ usuario, accessToken: res.accessToken });
         }),
       );
+  }
+
+  // Decodifica o payload de um JWT sem validar assinatura (apenas leitura).
+  private decodeJwt(token: string): AccessTokenPayload | null {
+    try {
+      const [, payload] = token.split('.');
+      if (!payload) return null;
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const json = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(''),
+      );
+      return JSON.parse(json) as AccessTokenPayload;
+    } catch {
+      return null;
+    }
   }
 
   // Limpa o estado local e redireciona para login (logout local).

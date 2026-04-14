@@ -1,0 +1,72 @@
+<section class="p-8 pt-24">
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold font-headline text-slate-100">Relatórios</h1>
+    <p class="text-sm text-slate-400 mt-1">Indicadores consolidados de Ordens de Serviço</p>
+  </header>
+
+  @if (loading()) {
+    <div class="text-slate-400 py-12 text-center">Carregando...</div>
+  } @else if (error()) {
+    <div class="bg-red-900/20 border border-red-900 text-red-300 p-4 rounded-lg">{{ error() }}</div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Total de O.S.</p>
+        <h3 class="text-4xl font-extrabold font-headline text-slate-100">{{ total() }}</h3>
+      </div>
+      <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Críticas</p>
+        <h3 class="text-4xl font-extrabold font-headline text-red-400">{{ criticas() }}</h3>
+      </div>
+      <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Concluídas</p>
+        <h3 class="text-4xl font-extrabold font-headline text-green-400">{{ concluidas() }}</h3>
+      </div>
+      <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Horas Trabalhadas</p>
+        <h3 class="text-4xl font-extrabold font-headline text-slate-100">{{ totalHoras() | number:'1.0-1' }}<span class="text-lg opacity-50 ml-1">h</span></h3>
+      </div>
+    </div>
+
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-8">
+      <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6">Distribuição por Status</h2>
+      <div class="space-y-4">
+        <div class="flex items-center gap-4">
+          <span class="w-40 text-xs text-slate-400 uppercase font-bold">Abertas</span>
+          <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500" [style.width.%]="total() ? (abertas() / total()) * 100 : 0"></div>
+          </div>
+          <span class="text-sm text-slate-300 font-semibold w-10 text-right">{{ abertas() }}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="w-40 text-xs text-slate-400 uppercase font-bold">Em Andamento</span>
+          <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-yellow-500" [style.width.%]="total() ? (emAndamento() / total()) * 100 : 0"></div>
+          </div>
+          <span class="text-sm text-slate-300 font-semibold w-10 text-right">{{ emAndamento() }}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="w-40 text-xs text-slate-400 uppercase font-bold">Aguardando Peça</span>
+          <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-orange-500" [style.width.%]="total() ? (aguardandoPeca() / total()) * 100 : 0"></div>
+          </div>
+          <span class="text-sm text-slate-300 font-semibold w-10 text-right">{{ aguardandoPeca() }}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="w-40 text-xs text-slate-400 uppercase font-bold">Concluídas</span>
+          <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-green-500" [style.width.%]="total() ? (concluidas() / total()) * 100 : 0"></div>
+          </div>
+          <span class="text-sm text-slate-300 font-semibold w-10 text-right">{{ concluidas() }}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="w-40 text-xs text-slate-400 uppercase font-bold">Canceladas</span>
+          <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-slate-500" [style.width.%]="total() ? (canceladas() / total()) * 100 : 0"></div>
+          </div>
+          <span class="text-sm text-slate-300 font-semibold w-10 text-right">{{ canceladas() }}</span>
+        </div>
+      </div>
+    </div>
+  }
+</section>

@@ -1,0 +1,45 @@
+<section class="p-8 pt-24">
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold font-headline text-slate-100">Histórico de Ordens de Serviço</h1>
+    <p class="text-sm text-slate-400 mt-1">Auditoria de mudanças de status nas O.S.</p>
+  </header>
+
+  @if (loading()) {
+    <div class="text-slate-400 py-12 text-center">Carregando...</div>
+  } @else if (error()) {
+    <div class="bg-red-900/20 border border-red-900 text-red-300 p-4 rounded-lg">{{ error() }}</div>
+  } @else {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden">
+      <table class="w-full text-left">
+        <thead class="bg-slate-900/60">
+          <tr class="text-xs text-slate-400 uppercase tracking-widest">
+            <th class="px-6 py-4">Data/Hora</th>
+            <th class="px-6 py-4">O.S.</th>
+            <th class="px-6 py-4">Usuário</th>
+            <th class="px-6 py-4">Status Anterior</th>
+            <th class="px-6 py-4">Status Novo</th>
+            <th class="px-6 py-4">Observação</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm text-slate-200">
+          @for (h of itens(); track h.id) {
+            <tr class="border-t border-slate-800 hover:bg-slate-800/30">
+              <td class="px-6 py-4 text-slate-400 font-mono text-xs">{{ h.registradoEm | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="px-6 py-4 font-mono text-blue-400">{{ h.ordemServico?.numero || h.osId }}</td>
+              <td class="px-6 py-4 text-slate-300">{{ h.usuario?.nome || '—' }}</td>
+              <td class="px-6 py-4 text-slate-500">{{ h.statusAnterior || '—' }}</td>
+              <td class="px-6 py-4">
+                <span class="text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-200 font-bold uppercase tracking-wider">{{ h.statusNovo }}</span>
+              </td>
+              <td class="px-6 py-4 text-slate-400 text-xs">{{ h.observacao || '—' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="px-6 py-12 text-center text-slate-500">Nenhum registro de histórico.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
