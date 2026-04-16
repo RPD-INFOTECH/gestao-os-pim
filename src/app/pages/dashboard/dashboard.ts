@@ -2,91 +2,74 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { OrdemServicoService } from '../../core/services/ordem-servico.service';
-import { OrdemServico, Prioridade, StatusOs } from '../../core/models/ordem-servico.model';
+import { DashboardService } from '../../core/services/dashboard.service';
+import { DashboardIndicadores, OrdemServico, Prioridade, StatusOs } from '../../core/models/ordem-servico.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { Perfil } from '../../core/models/perfil.enum';
+import { StatusLabelPipe } from '../../shared/status-label.pipe';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, StatusLabelPipe],
   templateUrl: './dashboard.html',
 })
 export class Dashboard implements OnInit {
   private service = inject(OrdemServicoService);
+  private dashboardService = inject(DashboardService);
   private auth = inject(AuthService);
 
   ordens = signal<OrdemServico[]>([]);
+  indicadores = signal<DashboardIndicadores | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
 
   perfil = this.auth.currentPerfil;
   user = this.auth.currentUser;
+  perfilEnum = Perfil;
 
   scoped = computed<OrdemServico[]>(() => {
     const p = this.perfil();
     const userId = this.user()?.id;
     const list = this.ordens();
     if (p === Perfil.SOLICITANTE && userId) return list.filter((o) => o.solicitante?.id === userId);
-    if (p === Perfil.TECNICO && userId) return list.filter((o) => o.tecnico?.id === userId);
+    if (p === Perfil.TECNICO && userId) {
+      return list.filter(
+        (o) => o.tecnico?.id === userId || (o.status === StatusOs.ABERTA && !o.tecnico)
+      );
+    }
     return list;
   });
 
-  abertas = computed(() => this.scoped().filter((o) => o.status === StatusOs.ABERTA).length);
-  abertasHoje = computed(() => {
-    const hoje = new Date();
-    return this.scoped().filter((o) => {
-      if (o.status !== StatusOs.ABERTA) {
-        return false;
-      }
+  abertas = computed(() => this.indicadores()?.abertas ?? 0);
+  emAndamento = computed(() => this.indicadores()?.em_andamento ?? 0);
+  aguardandoPeca = computed(() => this.indicadores()?.aguardando_peca ?? 0);
+  concluidasMes = computed(() => this.indicadores()?.concluidas_mes ?? 0);
+  criticas = computed(() => this.indicadores()?.criticas_abertas ?? 0);
+  semTecnico = computed(() => this.indicadores()?.sem_tecnico ?? 0);
+  disponiveisParaAssumir = computed(() => this.indicadores()?.disponiveis_para_assumir ?? 0);
+  minhasAtribuidas = computed(() => this.indicadores()?.minhas_atribuidas ?? 0);
+  apontamentoAberto = computed(() => this.indicadores()?.apontamento_aberto ?? false);
 
-      const abertura = new Date(o.abertura_em);
-      return (
-        abertura.getFullYear() === hoje.getFullYear() &&
-        abertura.getMonth() === hoje.getMonth() &&
-        abertura.getDate() === hoje.getDate()
-      );
-    }).length;
-  });
-  emAndamento = computed(() => this.scoped().filter((o) => o.status === StatusOs.EM_ANDAMENTO).length);
-  aguardandoPeca = computed(() => this.scoped().filter((o) => o.status === StatusOs.AGUARDANDO_PECA).length);
-  concluidas = computed(() => this.scoped().filter((o) => o.status === StatusOs.CONCLUIDA).length);
-  criticas = computed(() =>
-    this.scoped().filter(
-      (o) => o.prioridade === Prioridade.CRITICA && o.status !== StatusOs.CONCLUIDA && o.status !== StatusOs.CANCELADA,
-    ).length,
-  );
-
-  tempoMedioConclusaoHoras = computed(() => {
-    const agora = new Date();
-    const ha30Dias = new Date(agora);
-    ha30Dias.setDate(agora.getDate() - 30);
-
-    const concluidasRecentes = this.scoped().filter((o) => {
-      if (!o.conclusao_em) {
-        return false;
-      }
-
-      const conclusao = new Date(o.conclusao_em);
-      return conclusao >= ha30Dias;
-    });
-
-    if (!concluidasRecentes.length) {
-      return null;
-    }
-
-    const totalHoras = concluidasRecentes.reduce((acc, ordem) => {
-      const abertura = new Date(ordem.abertura_em);
-      const conclusao = new Date(ordem.conclusao_em!);
-      return acc + (conclusao.getTime() - abertura.getTime()) / (1000 * 60 * 60);
-    }, 0);
-
-    return totalHoras / concluidasRecentes.length;
-  });
+  tempoMedioConclusaoHoras = computed(() => this.indicadores()?.tempo_medio_execucao_horas ?? 0);
+  tempoMedioAteInicioHoras = computed(() => this.indicadores()?.tempo_medio_ate_inicio_horas ?? 0);
+  tempoMedioAteConclusaoHoras = computed(() => this.indicadores()?.tempo_medio_ate_conclusao_horas ?? 0);
+  tempoMedioTrabalhoHoras = computed(() => this.indicadores()?.tempo_medio_trabalho_horas ?? 0);
 
   recentes = computed(() => this.scoped().slice(0, 5));
+  isSupervisor = computed(() => this.perfil() === Perfil.SUPERVISOR);
+  isTecnico = computed(() => this.perfil() === Perfil.TECNICO);
+  isSolicitante = computed(() => this.perfil() === Perfil.SOLICITANTE);
 
   ngOnInit(): void {
     this.loading.set(true);
+    this.dashboardService.getIndicadores().subscribe({
+      next: (data) => this.indicadores.set(data),
+      error: () => {
+        this.error.set('Não foi possível carregar o dashboard.');
+        this.loading.set(false);
+      },
+    });
+
     this.service.list().subscribe({
       next: (data) => {
         this.ordens.set(data);

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { Perfil } from '../../../core/models/perfil.enum';
 import { CreateUsuarioDto, UpdateUsuarioDto } from '../../../core/models/usuario.model';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-usuario-form',
@@ -15,6 +16,7 @@ export class UsuarioForm implements OnInit {
   private service = inject(UsuarioService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   perfis = Object.values(Perfil);
   isEdit = signal(false);
@@ -74,7 +76,10 @@ export class UsuarioForm implements OnInit {
       };
       if (this.model.senha) dto.senha = this.model.senha;
       this.service.update(this.id()!, dto).subscribe({
-        next: () => this.router.navigate(['/usuarios']),
+        next: () => {
+          this.toast.success('Usuario atualizado com sucesso.');
+          this.router.navigate(['/usuarios']);
+        },
         error: (e) => {
           this.error.set(e?.error?.message || 'Falha ao atualizar usuário.');
           this.loading.set(false);
@@ -91,7 +96,10 @@ export class UsuarioForm implements OnInit {
         ativo: this.model.ativo,
       };
       this.service.create(dto).subscribe({
-        next: () => this.router.navigate(['/usuarios']),
+        next: () => {
+          this.toast.success('Usuario criado com sucesso.');
+          this.router.navigate(['/usuarios']);
+        },
         error: (e) => {
           this.error.set(e?.error?.message || 'Falha ao criar usuário.');
           this.loading.set(false);

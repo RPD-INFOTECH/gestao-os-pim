@@ -1,0 +1,27 @@
+<div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+  <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Histórico</h2>
+  <div class="space-y-4">
+    @for (h of historico(); track h.id) {
+      <div class="relative pl-6">
+        <span class="absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full bg-blue-500"></span>
+        <div class="absolute left-[4px] top-4 bottom-[-20px] w-px bg-slate-800"></div>
+        <div class="flex items-center gap-3 text-sm">
+          <div class="text-xs text-slate-500 font-mono w-28 shrink-0">{{ h.registradoEm | date:'dd/MM HH:mm' }}</div>
+          <span class="text-slate-500">{{ h.statusAnterior | statusLabel }}</span>
+          <span class="text-slate-600">→</span>
+          <span class="text-blue-400 font-semibold">{{ h.statusNovo | statusLabel }}</span>
+        </div>
+        <div class="ml-[7rem] mt-1">
+          @if (h.usuario?.nome) {
+            <p class="text-xs text-slate-400 mb-1">por {{ h.usuario?.nome }}</p>
+          }
+          @if (h.observacao) {
+            <p class="text-xs text-slate-500">{{ h.observacao }}</p>
+          }
+        </div>
+      </div>
+    } @empty {
+      <p class="text-slate-500 text-sm">Sem registros de histórico.</p>
+    }
+  </div>
+</div>

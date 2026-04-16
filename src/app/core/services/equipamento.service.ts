@@ -17,6 +17,10 @@ export class EquipamentoService {
     return this.http.get<Equipamento>(`${this.base}/${id}`);
   }
 
+  getDetails(id: number): Observable<Equipamento> {
+    return this.http.get<Equipamento>(`${this.base}/${id}/detalhes`);
+  }
+
   create(dto: CreateEquipamentoDto): Observable<Equipamento> {
     return this.http.post<Equipamento>(this.base, dto);
   }

@@ -26,7 +26,7 @@
       class="bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
       <option value="">Todos status</option>
       @for (s of statuses; track s) {
-        <option [value]="s">{{ s }}</option>
+        <option [value]="s">{{ s | statusLabel }}</option>
       }
     </select>
     <select [ngModel]="filtroPrioridade()" (ngModelChange)="filtroPrioridade.set($event); onFilterChange()"
@@ -36,6 +36,23 @@
         <option [value]="p">{{ p }}</option>
       }
     </select>
+    @if (perfil() === 'SUPERVISOR') {
+      <select [ngModel]="filtroTecnicoId()" (ngModelChange)="filtroTecnicoId.set($event); onFilterChange()"
+        class="bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Todos técnicos</option>
+        @for (t of tecnicos(); track t.id) {
+          <option [value]="t.id">{{ t.nome }}</option>
+        }
+      </select>
+    }
+    <input
+      [ngModel]="filtroSetor()"
+      (ngModelChange)="filtroSetor.set($event)"
+      (keyup.enter)="onFilterChange()"
+      type="text"
+      placeholder="Filtrar por setor"
+      class="bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
+    />
     <button
       type="button"
       (click)="onFilterChange()"
@@ -67,6 +84,7 @@
             <th class="px-6 py-4">Técnico</th>
             <th class="px-6 py-4">Prioridade</th>
             <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4">SLA</th>
             <th class="px-6 py-4">Abertura</th>
             <th class="px-6 py-4"></th>
           </tr>
@@ -88,7 +106,12 @@
               </td>
               <td class="px-6 py-4">
                 <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="statusClass(o.status)">
-                  {{ o.status }}
+                  {{ o.status | statusLabel }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="slaBadge(o)">
+                  {{ slaLabel(o) }}
                 </span>
               </td>
               <td class="px-6 py-4 text-slate-500 text-xs font-mono">{{ o.abertura_em | date:'dd/MM/yyyy HH:mm' }}</td>
@@ -100,7 +123,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="8" class="px-6 py-12 text-center text-slate-500">Nenhuma ordem de serviço encontrada.</td>
+              <td colspan="9" class="px-6 py-12 text-center text-slate-500">Nenhuma ordem de serviço encontrada.</td>
             </tr>
           }
         </tbody>

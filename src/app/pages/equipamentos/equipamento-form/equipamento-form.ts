@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EquipamentoService } from '../../../core/services/equipamento.service';
 import { CreateEquipamentoDto, UpdateEquipamentoDto } from '../../../core/models/equipamento.model';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-equipamento-form',
@@ -14,6 +15,7 @@ export class EquipamentoForm implements OnInit {
   private service = inject(EquipamentoService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   isEdit = signal(false);
   loading = signal(false);
@@ -25,8 +27,11 @@ export class EquipamentoForm implements OnInit {
     nome: '',
     tipo: '',
     localizacao: '',
+    setor: 'Operação',
+    numero_patrimonio: '',
     fabricante: '',
     modelo: '',
+    ultima_revisao: '',
     ativo: true,
   };
 
@@ -44,8 +49,11 @@ export class EquipamentoForm implements OnInit {
             nome: e.nome,
             tipo: e.tipo,
             localizacao: e.localizacao,
+            setor: e.setor,
+            numero_patrimonio: e.numero_patrimonio ?? '',
             fabricante: e.fabricante ?? '',
             modelo: e.modelo ?? '',
+            ultima_revisao: e.ultima_revisao ?? '',
             ativo: e.ativo,
           };
           this.loading.set(false);
@@ -67,14 +75,20 @@ export class EquipamentoForm implements OnInit {
       nome: this.model.nome,
       tipo: this.model.tipo,
       localizacao: this.model.localizacao,
+      setor: this.model.setor,
+      numero_patrimonio: this.model.numero_patrimonio || null,
       fabricante: this.model.fabricante || null,
       modelo: this.model.modelo || null,
+      ultima_revisao: this.model.ultima_revisao || null,
       ativo: this.model.ativo,
     };
 
     if (this.isEdit()) {
       this.service.update(this.id()!, payload as UpdateEquipamentoDto).subscribe({
-        next: () => this.router.navigate(['/equipamentos']),
+        next: () => {
+          this.toast.success('Equipamento atualizado com sucesso.');
+          this.router.navigate(['/equipamentos']);
+        },
         error: (e) => {
           this.error.set(e?.error?.message || 'Falha ao atualizar equipamento.');
           this.loading.set(false);
@@ -82,7 +96,10 @@ export class EquipamentoForm implements OnInit {
       });
     } else {
       this.service.create(payload as CreateEquipamentoDto).subscribe({
-        next: () => this.router.navigate(['/equipamentos']),
+        next: () => {
+          this.toast.success('Equipamento criado com sucesso.');
+          this.router.navigate(['/equipamentos']);
+        },
         error: (e) => {
           this.error.set(e?.error?.message || 'Falha ao criar equipamento.');
           this.loading.set(false);

@@ -46,8 +46,11 @@
                 }
               </td>
               <td class="px-6 py-4 text-right">
+                <a [routerLink]="['/equipamentos', e.id]" class="text-slate-400 hover:text-blue-400 inline-block p-1">
+                  <span class="material-symbols-outlined text-base">visibility</span>
+                </a>
                 @if (canEdit()) {
-                  <a [routerLink]="['/equipamentos', e.id]" class="text-slate-400 hover:text-blue-400 inline-block p-1">
+                  <a [routerLink]="['/equipamentos', e.id, 'editar']" class="text-slate-400 hover:text-blue-400 inline-block p-1 ml-2">
                     <span class="material-symbols-outlined text-base">edit</span>
                   </a>
                 }

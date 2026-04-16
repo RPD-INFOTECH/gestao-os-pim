@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { Usuario } from '../../../core/models/usuario.model';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -11,6 +12,7 @@ import { Usuario } from '../../../core/models/usuario.model';
 })
 export class UsuariosList implements OnInit {
   private service = inject(UsuarioService);
+  private toast = inject(ToastService);
 
   usuarios = signal<Usuario[]>([]);
   loading = signal(false);
@@ -38,8 +40,11 @@ export class UsuariosList implements OnInit {
   onDelete(u: Usuario): void {
     if (!confirm(`Excluir usuário "${u.nome}"?`)) return;
     this.service.delete(u.id).subscribe({
-      next: () => this.load(),
-      error: () => alert('Falha ao excluir usuário.'),
+      next: () => {
+        this.toast.success('Usuário desativado com sucesso.');
+        this.load();
+      },
+      error: (err) => this.toast.error(err?.error?.message || 'Falha ao excluir usuário.'),
     });
   }
 }
