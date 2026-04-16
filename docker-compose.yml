@@ -1,41 +1,4 @@
 services:
-  # Banco de dados PostgreSQL (igual ao docker-compose.yml do backend)
-  postgres:
-    image: postgres:16-alpine
-    container_name: servicopim_postgres
-    restart: always
-    environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASS:-admin}
-      POSTGRES_DB: ${DB_NAME:-servicopim}
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  # Backend Node.js/Express
-  app:
-    build:
-      context: ../patrese   # caminho relativo ao backend na pasta pai
-      dockerfile: dockerfile
-    container_name: servicopim_api
-    restart: always
-    env_file:
-      - ../patrese/.env
-    depends_on:
-      - postgres
-    ports:
-      - "9090:9090"
-    environment:
-      PORT: 9090
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASS: ${DB_PASS:-admin}
-      DB_NAME: ${DB_NAME:-servicopim}
-      NODE_ENV: production
-      DB_LOGGING: false
-
   # Frontend Angular (build + Nginx)
   frontend:
     build:
@@ -45,12 +8,9 @@ services:
     restart: always
     ports:
       - "8083:80"   # Acesse via http://SEU-IP:8083
-    depends_on:
-      - app
-
-volumes:
-  postgres_data:
+    networks:
+      - gestao-os-network
 
 networks:
-  default:
-    name: gestao-os-network
+  gestao-os-network:
+    external: true   # Rede criada previamente no Portainer (Networks -> Add network)
