@@ -1,0 +1,72 @@
+@if (ordem(); as o) {
+  <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+    <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Dados da Ordem</h2>
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <p class="text-xs text-slate-500 uppercase font-bold mb-1">Equipamento</p>
+        <p class="font-semibold text-slate-100">{{ o.equipamento.nome }}</p>
+        <p class="text-xs text-blue-400 font-mono">{{ o.equipamento.codigo }}</p>
+        <p class="text-xs text-slate-500 mt-1">{{ o.equipamento.localizacao }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 uppercase font-bold mb-1">Tipo/Prioridade</p>
+        <p class="font-semibold text-slate-100">{{ o.tipo_manutencao }}</p>
+        <p class="text-xs text-orange-400 font-bold mt-1">{{ o.prioridade }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 uppercase font-bold mb-1">Solicitante</p>
+        <p class="font-semibold text-slate-100">{{ o.solicitante.nome }}</p>
+        <p class="text-xs text-slate-500">{{ o.solicitante.email }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 uppercase font-bold mb-1">Técnico</p>
+        @if (o.tecnico) {
+          <p class="font-semibold text-slate-100">{{ o.tecnico.nome }}</p>
+          <p class="text-xs text-slate-500">{{ o.tecnico.email }}</p>
+        } @else {
+          <p class="text-slate-500 italic">Não atribuído</p>
+        }
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 uppercase font-bold mb-1">Duração</p>
+        <p class="font-semibold text-slate-100">{{ o.duracao_execucao_formatada || '—' }}</p>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 uppercase font-bold mb-1">Tempo Trabalhado</p>
+        <p class="font-semibold text-slate-100">{{ o.total_trabalhado_formatado || '0h 00min' }}</p>
+      </div>
+    </div>
+    <div class="mt-6 pt-6 border-t border-slate-800">
+      <p class="text-xs text-slate-500 uppercase font-bold mb-2">Descrição da Falha</p>
+      <p class="text-slate-200 whitespace-pre-line">{{ o.descricao_falha }}</p>
+    </div>
+  </div>
+
+  @if (o.status === 'CONCLUIDA') {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Conclusão</h2>
+      <div class="space-y-4">
+        <div>
+          <p class="text-xs text-slate-500 uppercase font-bold mb-1">Descrição do Serviço</p>
+          <p class="text-slate-200 whitespace-pre-line">{{ o.descricao_servico }}</p>
+        </div>
+        @if (o.pecas_utilizadas) {
+          <div>
+            <p class="text-xs text-slate-500 uppercase font-bold mb-1">Peças Utilizadas</p>
+            <p class="text-slate-200">{{ o.pecas_utilizadas }}</p>
+          </div>
+        }
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <p class="text-xs text-slate-500 uppercase font-bold mb-1">Horas Trabalhadas</p>
+            <p class="text-slate-200 font-bold">{{ o.horas_trabalhadas }}h</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 uppercase font-bold mb-1">Concluída em</p>
+            <p class="text-slate-200 font-mono text-sm">{{ o.conclusao_em | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}

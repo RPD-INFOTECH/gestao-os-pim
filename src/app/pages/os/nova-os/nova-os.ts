@@ -10,6 +10,7 @@ import {
   Prioridade,
   TipoManutencao,
 } from '../../../core/models/ordem-servico.model';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class NovaOs implements OnInit {
   private osService = inject(OrdemServicoService);
   private equipService = inject(EquipamentoService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   tipos = Object.values(TipoManutencao);
   prioridades = Object.values(Prioridade);
@@ -68,6 +70,7 @@ export class NovaOs implements OnInit {
     this.osService.create(dto).subscribe({
       next: (os) => {
         this.submitted = true;
+        this.toast.success('Ordem de servico criada com sucesso.');
         this.router.navigate(['/ordens-de-servico', os.id]);
       },
       error: (e) => {

@@ -26,20 +26,16 @@ export class Login {
   async onSubmit() {
     if (this.loading) return;
 
-    console.log('[login] submit iniciado');
     this.loading = true;
     this.errorMessage = '';
 
     try {
       await firstValueFrom(this.authService.login(this.email, this.password));
-      console.log('[login] sucesso');
       await this.router.navigate(['/dashboard']);
     } catch (err: any) {
-      console.log('[login] erro', err);
       this.errorMessage = err?.error?.message || 'E-mail ou senha inválidos.';
       this.cdr.detectChanges();
     } finally {
-      console.log('[login] finalize, loading=false');
       this.loading = false;
       this.cdr.detectChanges();
     }

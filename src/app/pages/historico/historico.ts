@@ -2,10 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HistoricoOsService } from '../../core/services/historico-os.service';
 import { HistoricoOS } from '../../core/models/historico-os.model';
+import { StatusLabelPipe } from '../../shared/status-label.pipe';
 
 @Component({
   selector: 'app-historico',
-  imports: [CommonModule],
+  imports: [CommonModule, StatusLabelPipe],
   templateUrl: './historico.html',
 })
 export class Historico implements OnInit {

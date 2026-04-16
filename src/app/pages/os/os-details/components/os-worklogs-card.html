@@ -1,0 +1,22 @@
+<div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+  <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Apontamentos de Trabalho</h2>
+  <div class="space-y-4">
+    @for (apontamento of apontamentos(); track apontamento.id) {
+      <div class="rounded-lg border border-slate-800 bg-slate-950/30 p-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <p class="text-sm font-semibold text-slate-100">
+            {{ apontamento.inicioEm | date:'dd/MM/yyyy HH:mm' }}
+            <span class="text-slate-500">→</span>
+            {{ apontamento.fimEm ? (apontamento.fimEm | date:'dd/MM/yyyy HH:mm') : 'Em aberto' }}
+          </p>
+          <span class="text-xs uppercase tracking-widest text-slate-500">
+            {{ apontamento.fimEm ? 'Finalizado' : 'Em andamento' }}
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 whitespace-pre-line">{{ apontamento.observacao || 'Sem observação' }}</p>
+      </div>
+    } @empty {
+      <p class="text-slate-500 text-sm">Nenhum apontamento registrado.</p>
+    }
+  </div>
+</div>

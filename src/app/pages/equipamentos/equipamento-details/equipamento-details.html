@@ -1,0 +1,111 @@
+<section class="p-8 pt-24 max-w-6xl">
+  <header class="flex items-center gap-4 mb-8">
+    <a [routerLink]="['/equipamentos']" class="text-slate-400 hover:text-slate-200">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+    <div>
+      <h1 class="text-3xl font-bold font-headline text-slate-100">Detalhe do Equipamento</h1>
+      <p class="text-sm text-slate-400 mt-1">Dados completos do ativo e ordens relacionadas.</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="text-slate-400 py-12 text-center">Carregando...</div>
+  } @else if (error()) {
+    <div class="bg-red-900/20 border border-red-900 text-red-300 p-4 rounded-lg">{{ error() }}</div>
+  } @else if (equipamento(); as e) {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Equipamento</p>
+              <h2 class="text-2xl font-bold text-slate-100">{{ e.nome }}</h2>
+              <p class="text-sm text-blue-400 font-mono mt-1">{{ e.codigo }}</p>
+            </div>
+            <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider"
+              [class]="e.ativo ? 'bg-green-900/40 text-green-400' : 'bg-slate-800 text-slate-500'">
+              {{ e.ativo ? 'ATIVO' : 'INATIVO' }}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Tipo</p>
+              <p class="text-slate-200">{{ e.tipo }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Setor</p>
+              <p class="text-slate-200">{{ e.setor }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Localização</p>
+              <p class="text-slate-200">{{ e.localizacao }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Patrimônio</p>
+              <p class="text-slate-200">{{ e.numero_patrimonio || '—' }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Fabricante / Modelo</p>
+              <p class="text-slate-200">{{ e.fabricante || '—' }} / {{ e.modelo || '—' }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Última revisão</p>
+              <p class="text-slate-200">{{ e.ultima_revisao ? (e.ultima_revisao | date:'dd/MM/yyyy') : '—' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+          <h3 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Ordens de serviço relacionadas</h3>
+          <div class="space-y-4">
+            @for (os of osRelacionadas(); track os.id) {
+              <a [routerLink]="['/ordens-de-servico', os.id]"
+                class="block rounded-lg border border-slate-800 bg-slate-950/40 p-4 hover:border-blue-500/40 transition-colors">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p class="text-blue-400 font-mono font-semibold">{{ os.numero }}</p>
+                    <p class="text-slate-100 font-medium mt-1">{{ os.descricao_falha }}</p>
+                    <p class="text-xs text-slate-500 mt-1">
+                      Solicitante: {{ os.solicitante.nome }} • Técnico: {{ os.tecnico?.nome || '—' }}
+                    </p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs uppercase tracking-widest text-slate-500">{{ os.status | statusLabel }}</p>
+                    <p class="text-xs text-slate-500 mt-1">{{ os.abertura_em | date:'dd/MM/yyyy HH:mm' }}</p>
+                  </div>
+                </div>
+              </a>
+            } @empty {
+              <p class="text-slate-500 text-sm">Nenhuma O.S. vinculada a este equipamento.</p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <aside class="space-y-6">
+        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+          <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Cadastro</p>
+          <p class="text-2xl font-bold text-slate-100">{{ e.data_cadastro | date:'dd/MM/yyyy' }}</p>
+          <p class="text-xs text-slate-500 mt-2">Data de entrada do equipamento no sistema.</p>
+        </div>
+
+        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+          <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Histórico de manutenção</p>
+          <div class="space-y-3">
+            @for (os of osRelacionadas(); track os.id) {
+              <div class="relative pl-5">
+                <span class="absolute left-0 top-1 h-2.5 w-2.5 rounded-full bg-blue-500"></span>
+                <p class="text-sm text-slate-200 font-medium">{{ os.numero }}</p>
+                <p class="text-xs text-slate-500">{{ os.status | statusLabel }} • {{ os.abertura_em | date:'dd/MM/yyyy HH:mm' }}</p>
+              </div>
+            } @empty {
+              <p class="text-slate-500 text-sm">Sem histórico de manutenção registrado.</p>
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+</section>

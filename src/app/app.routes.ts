@@ -7,6 +7,7 @@ import { OsDetails } from './pages/os/os-details/os-details';
 import { NovaOs } from './pages/os/nova-os/nova-os';
 import { Equipamentos } from './pages/equipamentos/equipamentos';
 import { EquipamentoForm } from './pages/equipamentos/equipamento-form/equipamento-form';
+import { EquipamentoDetails } from './pages/equipamentos/equipamento-details/equipamento-details';
 import { UsuariosList } from './pages/usuarios/usuarios-list/usuarios-list';
 import { UsuarioForm } from './pages/usuarios/usuario-form/usuario-form';
 import { Historico } from './pages/historico/historico';
@@ -50,9 +51,13 @@ export const routes: Routes = [
         canActivate: [roleGuard(Perfil.SUPERVISOR)],
       },
       {
-        path: 'equipamentos/:id',
+        path: 'equipamentos/:id/editar',
         component: EquipamentoForm,
         canActivate: [roleGuard(Perfil.SUPERVISOR)],
+      },
+      {
+        path: 'equipamentos/:id',
+        component: EquipamentoDetails,
       },
 
       {

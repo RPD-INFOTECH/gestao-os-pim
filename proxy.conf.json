@@ -1,27 +1,10 @@
 {
-  "/auth": {
+  "/api": {
     "target": "http://localhost:9090",
     "secure": false,
-    "changeOrigin": true
-  },
-  "/usuarios": {
-    "target": "http://localhost:9090",
-    "secure": false,
-    "changeOrigin": true
-  },
-  "/equipamentos": {
-    "target": "http://localhost:9090",
-    "secure": false,
-    "changeOrigin": true
-  },
-  "/ordens-servico": {
-    "target": "http://localhost:9090",
-    "secure": false,
-    "changeOrigin": true
-  },
-  "/historico-os": {
-    "target": "http://localhost:9090",
-    "secure": false,
-    "changeOrigin": true
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
   }
 }

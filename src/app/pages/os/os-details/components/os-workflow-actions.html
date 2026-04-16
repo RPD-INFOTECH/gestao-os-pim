@@ -1,0 +1,129 @@
+<aside class="space-y-6">
+  @if (canAssumir()) {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Assumir O.S.</h3>
+      <p class="text-sm text-slate-400 mb-4">Puxe esta ordem para sua fila e torne-se o técnico responsável.</p>
+      <button
+        (click)="assumirClicked.emit()"
+        [disabled]="action() === 'assumir'"
+        class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
+        Assumir ordem
+      </button>
+    </div>
+  }
+
+  @if (canAtribuirTecnico()) {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Atribuir Técnico</h3>
+      <select
+        [ngModel]="tecnicoSelecionado()"
+        (ngModelChange)="tecnicoSelecionadoChange.emit($event)"
+        class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Selecione...</option>
+        @for (t of tecnicos(); track t.id) {
+          <option [value]="t.id">{{ t.nome }}</option>
+        }
+      </select>
+      <button
+        (click)="atribuirClicked.emit()"
+        [disabled]="!tecnicoSelecionado() || action() === 'atribuir'"
+        class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
+        Atribuir
+      </button>
+    </div>
+  }
+
+  @if (canIniciar()) {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Iniciar Execução</h3>
+      <p class="text-sm text-slate-400 mb-4">Registra a entrada da O.S. em execução e marca o horário de início.</p>
+      <button
+        (click)="iniciarClicked.emit()"
+        [disabled]="action() === 'iniciar'"
+        class="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
+        Iniciar O.S.
+      </button>
+    </div>
+  }
+
+  @if (canAtualizarStatus()) {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Atualizar Status</h3>
+      <select
+        [ngModel]="novoStatus()"
+        (ngModelChange)="novoStatusChange.emit($event)"
+        class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Selecione...</option>
+        @for (s of availableStatusOptions(); track s) {
+          <option [value]="s">{{ s | statusLabel }}</option>
+        }
+      </select>
+      <textarea
+        [ngModel]="observacaoStatus()"
+        (ngModelChange)="observacaoStatusChange.emit($event)"
+        rows="3"
+        placeholder="Observação opcional. Ex.: peça aguardada, motivo do cancelamento, contexto da mudança."
+        class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+      <button
+        (click)="atualizarStatusClicked.emit()"
+        [disabled]="!novoStatus() || action() === 'status'"
+        class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
+        Atualizar
+      </button>
+    </div>
+  }
+
+  @if (canIniciarTrabalho() || canFinalizarTrabalho()) {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Apontamento de Trabalho</h3>
+      <textarea
+        [ngModel]="observacaoApontamento()"
+        (ngModelChange)="observacaoApontamentoChange.emit($event)"
+        rows="3"
+        placeholder="Observação opcional do apontamento"
+        class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+      @if (canIniciarTrabalho()) {
+        <button
+          (click)="iniciarTrabalhoClicked.emit()"
+          [disabled]="action() === 'apontamento-iniciar'"
+          class="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
+          Iniciar trabalho
+        </button>
+      }
+      @if (canFinalizarTrabalho()) {
+        <button
+          (click)="finalizarTrabalhoClicked.emit()"
+          [disabled]="action() === 'apontamento-finalizar'"
+          class="w-full px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
+          Finalizar trabalho
+        </button>
+      }
+    </div>
+  }
+
+  @if (canConcluir()) {
+    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Concluir O.S.</h3>
+      <textarea
+        [ngModel]="descricaoServico()"
+        (ngModelChange)="descricaoServicoChange.emit($event)"
+        rows="3"
+        placeholder="Descrição do serviço"
+        class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+      <input
+        [ngModel]="pecasUtilizadas()"
+        (ngModelChange)="pecasUtilizadasChange.emit($event)"
+        placeholder="Peças utilizadas (opcional)"
+        class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
+      <p class="text-xs text-slate-400 mb-3">
+        O tempo trabalhado será calculado automaticamente a partir do início e da conclusão da O.S.
+      </p>
+      <button
+        (click)="concluirClicked.emit()"
+        [disabled]="action() === 'concluir'"
+        class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
+        Marcar como Concluída
+      </button>
+    </div>
+  }
+</aside>

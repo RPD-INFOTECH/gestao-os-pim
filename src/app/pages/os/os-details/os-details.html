@@ -8,7 +8,7 @@
         <div class="flex items-center gap-3">
           <h1 class="text-3xl font-bold font-headline text-slate-100">{{ o.numero }}</h1>
           <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="statusClass(o.status)">
-            {{ o.status }}
+            {{ o.status | statusLabel }}
           </span>
         </div>
         <p class="text-sm text-slate-400 mt-1">Aberta em {{ o.abertura_em | date:'dd/MM/yyyy HH:mm' }}</p>
@@ -23,142 +23,41 @@
   } @else if (os(); as o) {
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-2 space-y-6">
-        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
-          <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Dados da Ordem</h2>
-          <div class="grid grid-cols-2 gap-6">
-            <div>
-              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Equipamento</p>
-              <p class="font-semibold text-slate-100">{{ o.equipamento.nome }}</p>
-              <p class="text-xs text-blue-400 font-mono">{{ o.equipamento.codigo }}</p>
-              <p class="text-xs text-slate-500 mt-1">{{ o.equipamento.localizacao }}</p>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Tipo/Prioridade</p>
-              <p class="font-semibold text-slate-100">{{ o.tipo_manutencao }}</p>
-              <p class="text-xs text-orange-400 font-bold mt-1">{{ o.prioridade }}</p>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Solicitante</p>
-              <p class="font-semibold text-slate-100">{{ o.solicitante.nome }}</p>
-              <p class="text-xs text-slate-500">{{ o.solicitante.email }}</p>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Técnico</p>
-              @if (o.tecnico) {
-                <p class="font-semibold text-slate-100">{{ o.tecnico.nome }}</p>
-                <p class="text-xs text-slate-500">{{ o.tecnico.email }}</p>
-              } @else {
-                <p class="text-slate-500 italic">Não atribuído</p>
-              }
-            </div>
-          </div>
-          <div class="mt-6 pt-6 border-t border-slate-800">
-            <p class="text-xs text-slate-500 uppercase font-bold mb-2">Descrição da Falha</p>
-            <p class="text-slate-200 whitespace-pre-line">{{ o.descricao_falha }}</p>
-          </div>
-        </div>
-
-        @if (o.status === 'CONCLUIDA') {
-          <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
-            <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Conclusão</h2>
-            <div class="space-y-4">
-              <div>
-                <p class="text-xs text-slate-500 uppercase font-bold mb-1">Descrição do Serviço</p>
-                <p class="text-slate-200 whitespace-pre-line">{{ o.descricao_servico }}</p>
-              </div>
-              @if (o.pecas_utilizadas) {
-                <div>
-                  <p class="text-xs text-slate-500 uppercase font-bold mb-1">Peças Utilizadas</p>
-                  <p class="text-slate-200">{{ o.pecas_utilizadas }}</p>
-                </div>
-              }
-              <div class="grid grid-cols-2 gap-6">
-                <div>
-                  <p class="text-xs text-slate-500 uppercase font-bold mb-1">Horas Trabalhadas</p>
-                  <p class="text-slate-200 font-bold">{{ o.horas_trabalhadas }}h</p>
-                </div>
-                <div>
-                  <p class="text-xs text-slate-500 uppercase font-bold mb-1">Concluída em</p>
-                  <p class="text-slate-200 font-mono text-sm">{{ o.conclusao_em | date:'dd/MM/yyyy HH:mm' }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
-
-        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
-          <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Histórico</h2>
-          <div class="space-y-3">
-            @for (h of historico(); track h.id) {
-              <div class="flex gap-4 text-sm">
-                <div class="text-xs text-slate-500 font-mono w-32 shrink-0">{{ h.registradoEm | date:'dd/MM HH:mm' }}</div>
-                <div class="flex-1">
-                  <span class="text-slate-500">{{ h.statusAnterior || '—' }}</span>
-                  <span class="text-slate-600 mx-2">→</span>
-                  <span class="text-blue-400 font-semibold">{{ h.statusNovo }}</span>
-                  @if (h.observacao) {
-                    <p class="text-xs text-slate-500 mt-1">{{ h.observacao }}</p>
-                  }
-                </div>
-              </div>
-            } @empty {
-              <p class="text-slate-500 text-sm">Sem registros de histórico.</p>
-            }
-          </div>
-        </div>
+        <app-os-summary-card [ordem]="o" />
+        <app-os-worklogs-card [apontamentos]="apontamentos()" />
+        <app-os-history-card [historico]="historico()" />
       </div>
 
-      <aside class="space-y-6">
-        @if (canAtribuirTecnico()) {
-          <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
-            <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Atribuir Técnico</h3>
-            <select [ngModel]="tecnicoSelecionado()" (ngModelChange)="tecnicoSelecionado.set($event)"
-              class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Selecione...</option>
-              @for (t of tecnicos(); track t.id) {
-                <option [value]="t.id">{{ t.nome }}</option>
-              }
-            </select>
-            <button (click)="atribuirTecnico()" [disabled]="!tecnicoSelecionado() || action() === 'atribuir'"
-              class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
-              Atribuir
-            </button>
-          </div>
-        }
-
-        @if (canAtualizarStatus()) {
-          <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
-            <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Atualizar Status</h3>
-            <select [ngModel]="novoStatus()" (ngModelChange)="novoStatus.set($event)"
-              class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Selecione...</option>
-              @for (s of statusOptions; track s) {
-                <option [value]="s">{{ s }}</option>
-              }
-            </select>
-            <button (click)="atualizarStatus()" [disabled]="!novoStatus() || action() === 'status'"
-              class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
-              Atualizar
-            </button>
-          </div>
-        }
-
-        @if (canConcluir()) {
-          <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
-            <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Concluir O.S.</h3>
-            <textarea [(ngModel)]="conclusao.descricao_servico" rows="3" placeholder="Descrição do serviço"
-              class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
-            <input [(ngModel)]="conclusao.pecas_utilizadas" placeholder="Peças utilizadas (opcional)"
-              class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
-            <input [(ngModel)]="conclusao.horas_trabalhadas" type="number" step="0.1" min="0.1" placeholder="Horas trabalhadas"
-              class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
-            <button (click)="concluir()" [disabled]="action() === 'concluir'"
-              class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
-              Marcar como Concluída
-            </button>
-          </div>
-        }
-      </aside>
+      <app-os-workflow-actions
+        [canAssumir]="canAssumir()"
+        [canAtribuirTecnico]="canAtribuirTecnico()"
+        [canIniciar]="canIniciar()"
+        [canAtualizarStatus]="canAtualizarStatus()"
+        [canIniciarTrabalho]="canIniciarTrabalho()"
+        [canFinalizarTrabalho]="canFinalizarTrabalho()"
+        [canConcluir]="canConcluir()"
+        [action]="action()"
+        [tecnicos]="tecnicos()"
+        [tecnicoSelecionado]="tecnicoSelecionado()"
+        [novoStatus]="novoStatus()"
+        [availableStatusOptions]="availableStatusOptions()"
+        [observacaoStatus]="observacaoStatus()"
+        [observacaoApontamento]="observacaoApontamento()"
+        [descricaoServico]="conclusao.descricao_servico"
+        [pecasUtilizadas]="conclusao.pecas_utilizadas"
+        (tecnicoSelecionadoChange)="tecnicoSelecionado.set($event)"
+        (novoStatusChange)="novoStatus.set($event)"
+        (observacaoStatusChange)="observacaoStatus.set($event)"
+        (observacaoApontamentoChange)="observacaoApontamento.set($event)"
+        (descricaoServicoChange)="conclusao.descricao_servico = $event"
+        (pecasUtilizadasChange)="conclusao.pecas_utilizadas = $event"
+        (assumirClicked)="assumir()"
+        (atribuirClicked)="atribuirTecnico()"
+        (iniciarClicked)="iniciar()"
+        (atualizarStatusClicked)="atualizarStatus()"
+        (iniciarTrabalhoClicked)="iniciarTrabalho()"
+        (finalizarTrabalhoClicked)="finalizarTrabalho()"
+        (concluirClicked)="concluir()" />
     </div>
   }
 </section>

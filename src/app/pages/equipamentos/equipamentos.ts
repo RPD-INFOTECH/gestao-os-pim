@@ -5,6 +5,7 @@ import { EquipamentoService } from '../../core/services/equipamento.service';
 import { Equipamento } from '../../core/models/equipamento.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { Perfil } from '../../core/models/perfil.enum';
+import { ToastService } from '../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-equipamentos',
@@ -14,6 +15,7 @@ import { Perfil } from '../../core/models/perfil.enum';
 export class Equipamentos implements OnInit {
   private service = inject(EquipamentoService);
   private auth = inject(AuthService);
+  private toast = inject(ToastService);
 
   equipamentos = signal<Equipamento[]>([]);
   loading = signal(false);
@@ -44,8 +46,11 @@ export class Equipamentos implements OnInit {
   onDelete(e: Equipamento): void {
     if (!confirm(`Desativar equipamento "${e.nome}"?`)) return;
     this.service.delete(e.id).subscribe({
-      next: () => this.load(),
-      error: () => alert('Falha ao desativar equipamento.'),
+      next: () => {
+        this.toast.success('Equipamento desativado com sucesso.');
+        this.load();
+      },
+      error: (err) => this.toast.error(err?.error?.message || 'Falha ao desativar equipamento.'),
     });
   }
 }

@@ -38,6 +38,22 @@ export interface OrdemServico {
   descricao_servico: string | null;
   pecas_utilizadas: string | null;
   horas_trabalhadas: number | null;
+  duracao_execucao_minutos?: number | null;
+  duracao_execucao_formatada?: string | null;
+  total_trabalhado_minutos?: number;
+  total_trabalhado_formatado?: string;
+  apontamento_aberto?: boolean;
+  apontamentos?: ApontamentoOs[];
+}
+
+export interface ApontamentoOs {
+  id: string;
+  osId: string;
+  tecnicoId: string;
+  inicioEm: string;
+  fimEm: string | null;
+  observacao: string | null;
+  criadoEm: string;
 }
 
 export interface CreateOrdemServicoDto {
@@ -50,5 +66,25 @@ export interface CreateOrdemServicoDto {
 export interface ConcluirOrdemServicoDto {
   descricao_servico: string;
   pecas_utilizadas?: string | null;
-  horas_trabalhadas: number;
+}
+
+export interface AtualizarStatusDto {
+  status: StatusOs;
+  observacao?: string | null;
+}
+
+export interface DashboardIndicadores {
+  abertas: number;
+  em_andamento: number;
+  aguardando_peca: number;
+  concluidas_mes: number;
+  criticas_abertas: number;
+  sem_tecnico: number;
+  disponiveis_para_assumir: number;
+  minhas_atribuidas: number;
+  apontamento_aberto: boolean;
+  tempo_medio_execucao_horas: number;
+  tempo_medio_ate_inicio_horas: number;
+  tempo_medio_ate_conclusao_horas: number;
+  tempo_medio_trabalho_horas: number;
 }
