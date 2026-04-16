@@ -54,6 +54,7 @@ export class OsDetails implements OnInit {
   observacaoApontamento = signal('');
 
   isSupervisor = computed(() => this.perfil() === Perfil.SUPERVISOR);
+  isSolicitante = computed(() => this.perfil() === Perfil.SOLICITANTE);
   isTecnicoAtribuido = computed(() => {
     const o = this.os();
     return this.perfil() === Perfil.TECNICO && o?.tecnico?.id === this.user()?.id;

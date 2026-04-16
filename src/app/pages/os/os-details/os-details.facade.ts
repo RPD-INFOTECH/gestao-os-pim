@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { forkJoin, map, of } from 'rxjs';
+import { catchError, forkJoin, map, of } from 'rxjs';
 import { HistoricoOsService } from '../../../core/services/historico-os.service';
 import { OrdemServicoService } from '../../../core/services/ordem-servico.service';
 import { UsuarioService } from '../../../core/services/usuario.service';
@@ -16,13 +16,22 @@ export class OsDetailsFacade {
       map((ordem) =>
         forkJoin({
           ordem: of(ordem),
-          historico: this.historicoService.byOs(ordem.id),
-          apontamentos: this.osService.listarApontamentos(ordem.id),
+          historico:
+            perfil === Perfil.SOLICITANTE
+              ? of([])
+              : this.historicoService.byOs(ordem.id).pipe(catchError(() => of([]))),
+          apontamentos:
+            perfil === Perfil.SOLICITANTE
+              ? of([])
+              : this.osService.listarApontamentos(ordem.id).pipe(catchError(() => of([]))),
           tecnicos:
             perfil === Perfil.SUPERVISOR
               ? this.usuarioService
                   .list()
-                  .pipe(map((users) => users.filter((u) => u.perfil === Perfil.TECNICO && u.ativo)))
+                  .pipe(
+                    map((users) => users.filter((u) => u.perfil === Perfil.TECNICO && u.ativo)),
+                    catchError(() => of([]))
+                  )
               : of([]),
         })
       )

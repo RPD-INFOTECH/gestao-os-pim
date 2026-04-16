@@ -44,7 +44,11 @@ export const routes: Routes = [
         component: OsDetails,
       },
 
-      { path: 'equipamentos', component: Equipamentos },
+      {
+        path: 'equipamentos',
+        component: Equipamentos,
+        canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR)],
+      },
       {
         path: 'equipamentos/novo',
         component: EquipamentoForm,
@@ -58,6 +62,7 @@ export const routes: Routes = [
       {
         path: 'equipamentos/:id',
         component: EquipamentoDetails,
+        canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR)],
       },
 
       {
