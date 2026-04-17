@@ -16,19 +16,19 @@
   <form (ngSubmit)="onSubmit()" #f="ngForm" class="bg-slate-900/40 border border-slate-800 rounded-xl p-8 space-y-6">
     <div>
       <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Nome *</label>
-      <input name="nome" [(ngModel)]="model.nome" required minlength="3"
+      <input data-cy="user-nome" name="nome" [(ngModel)]="model.nome" required minlength="3"
         class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none" />
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Email *</label>
-        <input name="email" type="email" [(ngModel)]="model.email" required
+        <input data-cy="user-email" name="email" type="email" [(ngModel)]="model.email" required
           class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none" />
       </div>
       <div>
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Matrícula *</label>
-        <input name="matricula" [(ngModel)]="model.matricula" required
+        <input data-cy="user-matricula" name="matricula" [(ngModel)]="model.matricula" required
           class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none font-mono" />
       </div>
     </div>
@@ -37,14 +37,14 @@
       <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">
         Senha {{ isEdit() ? '(deixe em branco para não alterar)' : '*' }}
       </label>
-      <input name="senha" type="password" [(ngModel)]="model.senha" [required]="!isEdit()" minlength="6"
+      <input data-cy="user-senha" name="senha" type="password" [(ngModel)]="model.senha" [required]="!isEdit()" minlength="6"
         class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none" />
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Perfil *</label>
-        <select name="perfil" [(ngModel)]="model.perfil" required
+        <select data-cy="user-perfil" name="perfil" [(ngModel)]="model.perfil" required
           class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none">
           @for (p of perfis; track p) {
             <option [value]="p">{{ p }}</option>
@@ -53,7 +53,7 @@
       </div>
       <div>
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Setor</label>
-        <input name="setor" [(ngModel)]="model.setor"
+        <input data-cy="user-setor" name="setor" [(ngModel)]="model.setor"
           class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none" />
       </div>
     </div>
