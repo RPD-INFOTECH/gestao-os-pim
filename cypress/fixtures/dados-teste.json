@@ -1,0 +1,25 @@
+{
+  "equipamento": {
+    "codigo": "EQ-TESTE-001",
+    "nome": "Equipamento de Teste Cypress",
+    "tipo": "Compressor",
+    "localizacao": "Sala de Testes",
+    "setor": "Operação"
+  },
+  "usuario_tecnico": {
+    "nome": "Técnico Cypress",
+    "email": "tecnico.cypress@pim.com",
+    "matricula": "TEC-CY-001",
+    "senha": "Cypress@123",
+    "perfil": "TÉCNICO",
+    "setor": "Manutenção"
+  },
+  "usuario_solicitante": {
+    "nome": "Solicitante Cypress",
+    "email": "solicitante.cypress@pim.com",
+    "matricula": "SOL-CY-001",
+    "senha": "Cypress@123",
+    "perfil": "SOLICITANTE",
+    "setor": "Operação"
+  }
+}
