@@ -30,13 +30,13 @@
                   {{ apontamento.fimEm ? 'Finalizado' : 'Em andamento' }}
                 </span>
               </div>
-              <p class="text-xs text-slate-500 whitespace-pre-line">{{ apontamento.observacao || 'Sem observação' }}</p>
+              <p class="text-xs text-slate-500 whitespace-pre-line">{{ apontamento.observacao || 'Observação não informada.' }}</p>
             </div>
           }
         </div>
       </section>
     } @empty {
-      <p class="text-slate-500 text-sm">Nenhum apontamento registrado.</p>
+      <p class="text-slate-500 text-sm">Nenhum apontamento encontrado.</p>
     }
     </div>
   </div>

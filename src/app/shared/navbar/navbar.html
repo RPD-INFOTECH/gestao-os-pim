@@ -82,6 +82,10 @@
   </div>
 
   <div class="flex items-center gap-4">
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/80 px-3 py-2 text-right lg:hidden">
+      <p class="text-sm font-semibold leading-none text-slate-100">{{ now() | date:'HH:mm' }}</p>
+      <p class="mt-1 text-[10px] text-slate-400">{{ now() | date:'dd/MM' }}</p>
+    </div>
     <div class="hidden rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-2 text-right lg:block">
       <p class="text-[10px] uppercase tracking-[0.24em] text-slate-500">Relógio operacional</p>
       <p class="text-base font-semibold text-slate-100">{{ now() | date:'HH:mm:ss' }}</p>

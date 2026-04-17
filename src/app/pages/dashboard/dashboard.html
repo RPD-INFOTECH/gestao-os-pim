@@ -1,19 +1,19 @@
-<section class="p-8 pt-24">
-  <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
+<section class="px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+  <header class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
-      <h1 class="text-3xl font-bold font-headline text-slate-100">Dashboard</h1>
+      <h1 class="text-2xl font-bold font-headline text-slate-100 sm:text-3xl">Dashboard</h1>
       <p class="text-sm text-slate-400 mt-1">Visão geral das ordens de serviço da operação.</p>
     </div>
-    <div class="flex gap-3">
+    <div class="flex flex-col gap-3 sm:flex-row">
       <a
         [routerLink]="['/ordens-de-servico']"
-        class="px-4 py-2 border border-slate-700 text-slate-300 rounded-lg hover:bg-slate-800 transition-colors font-semibold"
+        class="rounded-lg border border-slate-700 px-4 py-2 text-center font-semibold text-slate-300 transition-colors hover:bg-slate-800"
       >
         Ver listagem
       </a>
       <a
         [routerLink]="['/ordens-de-servico/nova']"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-semibold"
+        class="rounded-lg bg-blue-600 px-4 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-500"
       >
         Nova O.S.
       </a>
@@ -21,122 +21,122 @@
   </header>
 
   @if (loading()) {
-    <div class="text-slate-400 py-12 text-center">Carregando dashboard...</div>
+    <div class="text-slate-400 py-12 text-center">Carregando...</div>
   } @else if (error()) {
     <div class="bg-red-900/20 border border-red-900 text-red-300 p-4 rounded-lg mb-6">{{ error() }}</div>
   } @else {
     @if (isSupervisor()) {
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">OS abertas</p>
-          <p class="text-4xl font-bold text-slate-100">{{ abertas() }}</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ abertas() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Em andamento</p>
-          <p class="text-4xl font-bold text-yellow-400">{{ emAndamento() }}</p>
+          <p class="text-3xl font-bold text-yellow-400 sm:text-4xl">{{ emAndamento() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Aguardando peça</p>
-          <p class="text-4xl font-bold text-orange-400">{{ aguardandoPeca() }}</p>
+          <p class="text-3xl font-bold text-orange-400 sm:text-4xl">{{ aguardandoPeca() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Críticas abertas</p>
-          <p class="text-4xl font-bold text-red-400">{{ criticas() }}</p>
+          <p class="text-3xl font-bold text-red-400 sm:text-4xl">{{ criticas() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Sem técnico</p>
-          <p class="text-4xl font-bold text-slate-100">{{ semTecnico() }}</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ semTecnico() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Concluídas no mês</p>
-          <p class="text-4xl font-bold text-slate-100">{{ concluidasMes() }}</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ concluidasMes() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Tempo médio até início</p>
-          <p class="text-4xl font-bold text-slate-100">{{ tempoMedioAteInicioHoras() | number:'1.1-1' }}h</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ tempoMedioAteInicioHoras() | number:'1.1-1' }}h</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Tempo médio até conclusão</p>
-          <p class="text-4xl font-bold text-slate-100">{{ tempoMedioAteConclusaoHoras() | number:'1.1-1' }}h</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ tempoMedioAteConclusaoHoras() | number:'1.1-1' }}h</p>
         </article>
       </div>
     }
 
     @if (isTecnico()) {
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Minhas atribuídas</p>
-          <p class="text-4xl font-bold text-slate-100">{{ minhasAtribuidas() }}</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ minhasAtribuidas() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Disponíveis para assumir</p>
-          <p class="text-4xl font-bold text-blue-400">{{ disponiveisParaAssumir() }}</p>
+          <p class="text-3xl font-bold text-blue-400 sm:text-4xl">{{ disponiveisParaAssumir() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Em andamento</p>
-          <p class="text-4xl font-bold text-yellow-400">{{ emAndamento() }}</p>
+          <p class="text-3xl font-bold text-yellow-400 sm:text-4xl">{{ emAndamento() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Aguardando peça</p>
-          <p class="text-4xl font-bold text-orange-400">{{ aguardandoPeca() }}</p>
+          <p class="text-3xl font-bold text-orange-400 sm:text-4xl">{{ aguardandoPeca() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Concluídas no mês</p>
-          <p class="text-4xl font-bold text-slate-100">{{ concluidasMes() }}</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ concluidasMes() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Apontamento aberto</p>
-          <p class="text-4xl font-bold" [class]="apontamentoAberto() ? 'text-green-400' : 'text-slate-100'">
+          <p class="text-3xl font-bold sm:text-4xl" [class]="apontamentoAberto() ? 'text-green-400' : 'text-slate-100'">
             {{ apontamentoAberto() ? 'Sim' : 'Não' }}
           </p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Tempo médio de trabalho</p>
-          <p class="text-4xl font-bold text-slate-100">{{ tempoMedioTrabalhoHoras() | number:'1.1-1' }}h</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ tempoMedioTrabalhoHoras() | number:'1.1-1' }}h</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Tempo médio até início</p>
-          <p class="text-4xl font-bold text-slate-100">{{ tempoMedioAteInicioHoras() | number:'1.1-1' }}h</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ tempoMedioAteInicioHoras() | number:'1.1-1' }}h</p>
         </article>
       </div>
     }
 
     @if (isSolicitante()) {
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+      <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Minhas abertas</p>
-          <p class="text-4xl font-bold text-slate-100">{{ abertas() }}</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ abertas() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Em andamento</p>
-          <p class="text-4xl font-bold text-yellow-400">{{ emAndamento() }}</p>
+          <p class="text-3xl font-bold text-yellow-400 sm:text-4xl">{{ emAndamento() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Aguardando peça</p>
-          <p class="text-4xl font-bold text-orange-400">{{ aguardandoPeca() }}</p>
+          <p class="text-3xl font-bold text-orange-400 sm:text-4xl">{{ aguardandoPeca() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Concluídas no mês</p>
-          <p class="text-4xl font-bold text-slate-100">{{ concluidasMes() }}</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ concluidasMes() }}</p>
         </article>
-        <article class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
+        <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Tempo médio até conclusão</p>
-          <p class="text-4xl font-bold text-slate-100">{{ tempoMedioAteConclusaoHoras() | number:'1.1-1' }}h</p>
+          <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ tempoMedioAteConclusaoHoras() | number:'1.1-1' }}h</p>
         </article>
       </div>
     }
 
     <section class="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden">
-      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+      <div class="flex items-center justify-between border-b border-slate-800 px-4 py-4 sm:px-6">
         <div>
           <h2 class="text-lg font-bold text-slate-100">Ordens de serviço recentes</h2>
-          <p class="text-sm text-slate-400">As 5 OS mais recentes visíveis para o perfil atual.</p>
+          <p class="text-sm text-slate-400">Últimas 5 O.S. disponíveis para consulta.</p>
         </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left">
-          <thead class="bg-slate-900/60">
+      <div class="panel-scroll overflow-x-auto">
+        <table class="min-w-[44rem] w-full text-left">
+          <thead class="sticky top-0 bg-slate-900/95">
             <tr class="text-xs text-slate-400 uppercase tracking-widest">
               <th class="px-6 py-4">Número</th>
               <th class="px-6 py-4">Equipamento</th>
