@@ -93,10 +93,10 @@
         </thead>
         <tbody class="text-sm text-slate-200">
           @for (e of equipamentos(); track e.id) {
-            <tr class="border-t border-slate-800 hover:bg-slate-800/30 transition-colors">
+            <tr data-cy="equipamento-item" class="border-t border-slate-800 hover:bg-slate-800/30 transition-colors">
               <td class="px-6 py-4 font-mono text-blue-400 font-semibold">{{ e.codigo }}</td>
               <td class="px-6 py-4">
-                <p class="font-semibold text-slate-100">{{ e.nome }}</p>
+                <a [routerLink]="['/equipamentos', e.id]" class="font-semibold text-slate-100 hover:text-blue-400">{{ e.nome }}</a>
                 <p class="text-xs text-slate-500">{{ e.numero_patrimonio || 'Sem patrimônio' }}</p>
               </td>
               <td class="px-6 py-4">
@@ -125,7 +125,7 @@
                   </a>
                 }
                 @if (canDelete()) {
-                  <button (click)="onDelete(e)" class="text-slate-400 hover:text-red-400 inline-block p-1 ml-2">
+                  <button data-cy="btn-deletar" (click)="onDelete(e)" class="text-slate-400 hover:text-red-400 inline-block p-1 ml-2">
                     <span class="material-symbols-outlined text-base">delete</span>
                   </button>
                 }

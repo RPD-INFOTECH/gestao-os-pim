@@ -26,11 +26,10 @@ services:
       JWT_ACCESS_SECRET: e2e_access_secret_test
       JWT_REFRESH_SECRET: e2e_refresh_secret_test
       DB_LOGGING: "false"
+      DISABLE_RATE_LIMIT: "true"
     depends_on:
       postgres:
         condition: service_healthy
-    ports:
-      - "9090:9090"
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:9090/health || exit 1"]
       interval: 10s

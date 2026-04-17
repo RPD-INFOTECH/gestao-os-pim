@@ -4,6 +4,7 @@
       <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Assumir O.S.</h3>
       <p class="text-sm text-slate-400 mb-4">Puxe esta ordem para sua fila e torne-se o técnico responsável.</p>
       <button
+        data-cy="btn-assumir"
         (click)="assumirClicked.emit()"
         [disabled]="action() === 'assumir'"
         class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
@@ -21,6 +22,7 @@
         </p>
       }
       <select
+        data-cy="select-tecnico"
         [ngModel]="tecnicoSelecionado()"
         (ngModelChange)="tecnicoSelecionadoChange.emit($event)"
         class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500">
@@ -30,6 +32,7 @@
         }
       </select>
       <button
+        data-cy="btn-atribuir"
         (click)="atribuirClicked.emit()"
         [disabled]="atribuirBloqueado() || !tecnicoSelecionado() || action() === 'atribuir'"
         class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
@@ -43,6 +46,7 @@
       <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Iniciar Execução</h3>
       <p class="text-sm text-slate-400 mb-4">Registra a entrada da O.S. em execução e marca o horário de início.</p>
       <button
+        data-cy="btn-iniciar"
         (click)="iniciarClicked.emit()"
         [disabled]="action() === 'iniciar'"
         class="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">
@@ -110,12 +114,14 @@
     <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
       <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Concluir O.S.</h3>
       <textarea
+        data-cy="os-descricao-servico"
         [ngModel]="descricaoServico()"
         (ngModelChange)="descricaoServicoChange.emit($event)"
         rows="3"
         placeholder="Descrição do serviço"
         class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-2 text-slate-100 text-sm mb-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
       <input
+        data-cy="os-pecas-utilizadas"
         [ngModel]="pecasUtilizadas()"
         (ngModelChange)="pecasUtilizadasChange.emit($event)"
         placeholder="Peças utilizadas (opcional)"
@@ -124,6 +130,7 @@
         O tempo trabalhado será calculado automaticamente a partir do início e da conclusão da O.S.
       </p>
       <button
+        data-cy="btn-concluir"
         (click)="concluirClicked.emit()"
         [disabled]="action() === 'concluir'"
         class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm">

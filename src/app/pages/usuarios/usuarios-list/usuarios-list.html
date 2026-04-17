@@ -82,7 +82,7 @@
         <tbody class="text-sm text-slate-200">
           @for (u of filtrados(); track u.id) {
             <tr class="border-t border-slate-800 hover:bg-slate-800/30">
-              <td class="px-6 py-4 font-semibold">{{ u.nome }}</td>
+              <td class="px-6 py-4"><a [routerLink]="['/usuarios', u.id]" class="font-semibold text-slate-100 hover:text-blue-400">{{ u.nome }}</a></td>
               <td class="px-6 py-4 text-slate-400">{{ u.email }}</td>
               <td class="px-6 py-4 font-mono text-blue-400">{{ u.matricula }}</td>
               <td class="px-6 py-4">

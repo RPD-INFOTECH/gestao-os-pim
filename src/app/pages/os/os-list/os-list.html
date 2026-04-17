@@ -15,6 +15,7 @@
 
   <div class="flex flex-wrap gap-3 mb-6 items-center">
     <input
+      data-cy="input-busca"
       [ngModel]="filtroBusca()"
       (ngModelChange)="filtroBusca.set($event)"
       (keyup.enter)="onFilterChange()"
@@ -22,7 +23,7 @@
       placeholder="Buscar por número ou descrição"
       class="min-w-72 flex-1 bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
     />
-    <select [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event); onFilterChange()"
+    <select data-cy="filtro-status" [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event); onFilterChange()"
       class="bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
       <option value="">Todos status</option>
       @for (s of statuses; track s) {
@@ -90,8 +91,10 @@
         </thead>
         <tbody class="text-sm text-slate-200">
           @for (o of filtered(); track o.id) {
-            <tr class="border-t border-slate-800 hover:bg-slate-800/30">
-              <td class="px-6 py-4 font-mono text-blue-400 font-semibold">{{ o.numero }}</td>
+            <tr data-cy="os-row" class="border-t border-slate-800 hover:bg-slate-800/30">
+              <td class="px-6 py-4 font-mono font-semibold">
+                <a data-cy="os-numero-link" [routerLink]="['/ordens-de-servico', o.id]" class="text-blue-400 hover:text-blue-300">{{ o.numero }}</a>
+              </td>
               <td class="px-6 py-4">
                 <div class="flex flex-col">
                   <span class="font-semibold">{{ o.equipamento.nome }}</span>
