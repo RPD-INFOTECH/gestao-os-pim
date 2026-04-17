@@ -36,18 +36,45 @@ jobs:
         working-directory: gestao-os-pim-Patrese
         run: |
           echo "Aguardando API ficar pronta..."
-          for i in $(seq 1 30); do
-            if docker compose -f docker-compose.e2e.yml ps api | grep -q "healthy"; then
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:9090/health > /dev/null; then
               echo "API pronta!"
-              break
+              exit 0
+            fi
+            echo "Tentativa $i/60..."
+            sleep 5
+          done
+          echo "ERRO: API nao ficou pronta em 5 minutos"
+          docker compose -f docker-compose.e2e.yml ps
+          docker compose -f docker-compose.e2e.yml logs api
+          exit 1
+
+      - name: Wait for frontend to be ready
+        run: |
+          echo "Verificando frontend em localhost:3000..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000 > /dev/null; then
+              echo "Frontend respondendo!"
+              exit 0
             fi
             echo "Tentativa $i/30..."
-            sleep 10
+            sleep 3
           done
+          echo "ERRO: Frontend nao respondeu"
+          docker compose -f gestao-os-pim-Patrese/docker-compose.e2e.yml ps
+          docker compose -f gestao-os-pim-Patrese/docker-compose.e2e.yml logs frontend
+          exit 1
 
       - name: Seed test database
         working-directory: gestao-os-pim-Patrese
         run: bash cypress/seeds/seed-e2e.sh
+
+      - name: Override baseUrl in cypress.config.ts
+        working-directory: gestao-os-pim-Patrese
+        run: |
+          sed -i "s|baseUrl: 'https://manuos.izitecnologia.com.br'|baseUrl: 'http://localhost:3000'|" cypress.config.ts
+          echo "--- cypress.config.ts ---"
+          cat cypress.config.ts
 
       - name: Install frontend dependencies
         working-directory: gestao-os-pim-Patrese
@@ -60,7 +87,6 @@ jobs:
           browser: chrome
           headed: false
           install: false
-          config: baseUrl=http://localhost:3000
         env:
           CYPRESS_supervisor_email: admin@pim.com
           CYPRESS_supervisor_senha: Admin@123
@@ -71,6 +97,17 @@ jobs:
         with:
           name: cypress-screenshots
           path: gestao-os-pim-Patrese/cypress/screenshots
+
+      - name: Show docker logs on failure
+        if: failure()
+        working-directory: gestao-os-pim-Patrese
+        run: |
+          echo "=== docker compose ps ==="
+          docker compose -f docker-compose.e2e.yml ps
+          echo "=== API logs ==="
+          docker compose -f docker-compose.e2e.yml logs api
+          echo "=== Frontend logs ==="
+          docker compose -f docker-compose.e2e.yml logs frontend
 
       - name: Teardown E2E environment
         if: always()
