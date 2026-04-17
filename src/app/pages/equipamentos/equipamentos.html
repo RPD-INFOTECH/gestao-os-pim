@@ -1,11 +1,11 @@
-<section class="p-8 pt-24">
-  <header class="flex items-center justify-between mb-8">
+<section class="px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+  <header class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
-      <h1 class="text-3xl font-bold font-headline text-slate-100">Equipamentos</h1>
+      <h1 class="text-2xl font-bold font-headline text-slate-100 sm:text-3xl">Equipamentos</h1>
       <p class="text-sm text-slate-400 mt-1">Inventário de ativos da planta</p>
     </div>
     @if (canEdit()) {
-      <a [routerLink]="['/equipamentos/novo']" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-semibold">
+      <a [routerLink]="['/equipamentos/novo']" class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-500">
         <span class="material-symbols-outlined">add</span>
         Novo Equipamento
       </a>
@@ -79,7 +79,7 @@
   } @else {
     <div class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40">
       <div class="panel-scroll max-h-[38rem] overflow-auto">
-      <table class="w-full text-left">
+      <table class="min-w-[64rem] w-full text-left">
         <thead class="sticky top-0 bg-slate-900/95">
           <tr class="text-xs text-slate-400 uppercase tracking-widest">
             <th class="px-6 py-4">Código</th>
@@ -105,7 +105,7 @@
               </td>
               <td class="px-6 py-4 text-slate-400">{{ e.localizacao }}</td>
               <td class="px-6 py-4">
-                <p class="text-slate-300">{{ e.ultima_revisao ? (e.ultima_revisao | date:'dd/MM/yyyy') : 'Sem revisão' }}</p>
+                <p class="text-slate-300">{{ e.ultima_revisao ? (e.ultima_revisao | date:'dd/MM/yyyy') : 'Não registrada' }}</p>
                 <p class="text-xs text-slate-500">{{ e.os_abertas_count || 0 }} O.S. abertas</p>
               </td>
               <td class="px-6 py-4">
@@ -133,7 +133,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="7" class="px-6 py-12 text-center text-slate-500">Nenhum equipamento cadastrado.</td>
+              <td colspan="7" class="px-6 py-12 text-center text-slate-500">Nenhum equipamento encontrado.</td>
             </tr>
           }
         </tbody>

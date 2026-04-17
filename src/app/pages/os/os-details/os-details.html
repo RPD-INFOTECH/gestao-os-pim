@@ -1,10 +1,10 @@
-<section class="p-8 pt-24 max-w-6xl">
-  <header class="flex items-center gap-4 mb-8">
+<section class="max-w-6xl px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+  <header class="mb-8 flex items-start gap-3 sm:items-center sm:gap-4">
     <app-back-button fallback="/ordens-de-servico" />
     @if (os(); as o) {
       <div class="flex-1">
-        <div class="flex items-center gap-3">
-          <h1 class="text-3xl font-bold font-headline text-slate-100">{{ o.numero }}</h1>
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <h1 class="text-2xl font-bold font-headline text-slate-100 sm:text-3xl">{{ o.numero }}</h1>
           <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="statusClass(o.status)">
             {{ o.status | statusLabel }}
           </span>

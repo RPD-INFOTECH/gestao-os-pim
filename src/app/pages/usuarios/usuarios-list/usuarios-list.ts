@@ -7,6 +7,7 @@ import { Usuario } from '../../../core/models/usuario.model';
 import { ToastService } from '../../../shared/toast/toast.service';
 import { Perfil } from '../../../core/models/perfil.enum';
 import { computed } from '@angular/core';
+import { ConfirmationService } from '../../../shared/confirm/confirmation.service';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -16,6 +17,7 @@ import { computed } from '@angular/core';
 export class UsuariosList implements OnInit {
   private service = inject(UsuarioService);
   private toast = inject(ToastService);
+  private confirmation = inject(ConfirmationService);
 
   usuarios = signal<Usuario[]>([]);
   loading = signal(false);
@@ -86,8 +88,17 @@ export class UsuariosList implements OnInit {
     this.statusFiltro.set('todos');
   }
 
-  onDelete(u: Usuario): void {
-    if (!confirm(`Excluir usuário "${u.nome}"?`)) return;
+  async onDelete(u: Usuario): Promise<void> {
+    const confirmed = await this.confirmation.confirm({
+      title: 'Desativar usuário',
+      message: `Confirma a desativação do usuário "${u.nome}"?`,
+      confirmLabel: 'Desativar',
+      cancelLabel: 'Cancelar',
+      tone: 'danger',
+    });
+
+    if (!confirmed) return;
+
     this.service.delete(u.id).subscribe({
       next: () => {
         this.toast.success('Usuário desativado com sucesso.');
