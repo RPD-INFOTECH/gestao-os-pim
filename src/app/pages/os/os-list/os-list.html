@@ -1,26 +1,26 @@
-<section class="p-8 pt-24">
-  <header class="flex items-center justify-between mb-8">
+<section class="px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+  <header class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
-      <h1 class="text-3xl font-bold font-headline text-slate-100">Ordens de Serviço</h1>
+      <h1 class="text-2xl font-bold font-headline text-slate-100 sm:text-3xl">Ordens de Serviço</h1>
       <p class="text-sm text-slate-400 mt-1">Gestão das O.S. da planta</p>
     </div>
     @if (canCreate()) {
       <a [routerLink]="['/ordens-de-servico/nova']"
-         class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-semibold">
+         class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-500">
         <span class="material-symbols-outlined">add</span>
         Nova O.S.
       </a>
     }
   </header>
 
-  <div class="flex flex-wrap gap-3 mb-6 items-center">
+  <div class="mb-6 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,2fr)_repeat(5,minmax(0,1fr))]">
     <input
       [ngModel]="filtroBusca()"
       (ngModelChange)="filtroBusca.set($event)"
       (keyup.enter)="onFilterChange()"
       type="text"
       placeholder="Buscar por número ou descrição"
-      class="min-w-72 flex-1 bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
+      class="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
     />
     <select [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event); onFilterChange()"
       class="bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
@@ -52,20 +52,29 @@
         <option [value]="setor">{{ setor }}</option>
       }
     </select>
-    <button
-      type="button"
-      (click)="onFilterChange()"
-      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors font-semibold"
-    >
-      Buscar
-    </button>
-    <button
-      type="button"
-      (click)="clearFilters()"
-      class="px-4 py-2 border border-slate-700 text-slate-300 rounded-lg hover:bg-slate-800 transition-colors font-semibold"
-    >
-      Limpar
-    </button>
+    <select [ngModel]="filtroApontamento()" (ngModelChange)="filtroApontamento.set($event)"
+      class="bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="todos">Todos apontamentos</option>
+      <option value="com">Com apontamentos</option>
+      <option value="sem">Sem apontamentos</option>
+      <option value="aberto">Apontamento em aberto</option>
+    </select>
+    <div class="flex gap-3 md:col-span-2 xl:col-span-1">
+      <button
+        type="button"
+        (click)="onFilterChange()"
+        class="flex-1 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-500"
+      >
+        Buscar
+      </button>
+      <button
+        type="button"
+        (click)="clearFilters()"
+        class="flex-1 rounded-lg border border-slate-700 px-4 py-2 font-semibold text-slate-300 transition-colors hover:bg-slate-800"
+      >
+        Limpar
+      </button>
+    </div>
   </div>
 
   @if (loading()) {
@@ -73,9 +82,10 @@
   } @else if (error()) {
     <div class="bg-red-900/20 border border-red-900 text-red-300 p-4 rounded-lg">{{ error() }}</div>
   } @else {
-    <div class="bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden">
-      <table class="w-full text-left">
-        <thead class="bg-slate-900/60">
+    <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/40">
+      <div class="panel-scroll overflow-x-auto">
+      <table class="min-w-[72rem] w-full text-left">
+        <thead class="sticky top-0 bg-slate-900/95">
           <tr class="text-xs text-slate-400 uppercase tracking-widest">
             <th class="px-6 py-4">Número</th>
             <th class="px-6 py-4">Equipamento</th>
@@ -83,6 +93,7 @@
             <th class="px-6 py-4">Técnico</th>
             <th class="px-6 py-4">Prioridade</th>
             <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4">Apontamento</th>
             <th class="px-6 py-4">SLA</th>
             <th class="px-6 py-4">Abertura</th>
             <th class="px-6 py-4"></th>
@@ -109,6 +120,11 @@
                 </span>
               </td>
               <td class="px-6 py-4">
+                <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="apontamentoClass(o)">
+                  {{ apontamentoLabel(o) }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
                 <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="slaBadge(o)">
                   {{ slaLabel(o) }}
                 </span>
@@ -122,11 +138,12 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="9" class="px-6 py-12 text-center text-slate-500">Nenhuma ordem de serviço encontrada.</td>
+              <td colspan="10" class="px-6 py-12 text-center text-slate-500">Nenhuma ordem de serviço encontrada.</td>
             </tr>
           }
         </tbody>
       </table>
+      </div>
     </div>
   }
 </section>

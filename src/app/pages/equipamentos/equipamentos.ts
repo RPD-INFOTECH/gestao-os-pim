@@ -7,6 +7,7 @@ import { Equipamento } from '../../core/models/equipamento.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { Perfil } from '../../core/models/perfil.enum';
 import { ToastService } from '../../shared/toast/toast.service';
+import { ConfirmationService } from '../../shared/confirm/confirmation.service';
 
 @Component({
   selector: 'app-equipamentos',
@@ -17,6 +18,7 @@ export class Equipamentos implements OnInit {
   private service = inject(EquipamentoService);
   private auth = inject(AuthService);
   private toast = inject(ToastService);
+  private confirmation = inject(ConfirmationService);
 
   equipamentos = signal<Equipamento[]>([]);
   loading = signal(false);
@@ -68,8 +70,17 @@ export class Equipamentos implements OnInit {
     this.load();
   }
 
-  onDelete(e: Equipamento): void {
-    if (!confirm(`Desativar equipamento "${e.nome}"?`)) return;
+  async onDelete(e: Equipamento): Promise<void> {
+    const confirmed = await this.confirmation.confirm({
+      title: 'Desativar equipamento',
+      message: `Confirma a desativação do equipamento "${e.nome}"?`,
+      confirmLabel: 'Desativar',
+      cancelLabel: 'Cancelar',
+      tone: 'danger',
+    });
+
+    if (!confirmed) return;
+
     this.service.delete(e.id).subscribe({
       next: () => {
         this.toast.success('Equipamento desativado com sucesso.');

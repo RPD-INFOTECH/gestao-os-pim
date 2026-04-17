@@ -33,6 +33,7 @@ export class OsList implements OnInit {
   filtroPrioridade = signal<Prioridade | ''>('');
   filtroTecnicoId = signal('');
   filtroSetor = signal('');
+  filtroApontamento = signal<'todos' | 'com' | 'sem' | 'aberto'>('todos');
 
   perfil = this.auth.currentPerfil;
   user = this.auth.currentUser;
@@ -42,7 +43,19 @@ export class OsList implements OnInit {
     return p === Perfil.SOLICITANTE || p === Perfil.SUPERVISOR;
   });
 
-  filtered = computed<OrdemServico[]>(() => this.ordens());
+  filtered = computed<OrdemServico[]>(() => {
+    const filtroApontamento = this.filtroApontamento();
+
+    return this.ordens().filter((ordem) => {
+      const totalApontamentos = ordem.apontamentos?.length ?? 0;
+
+      if (filtroApontamento === 'com') return totalApontamentos > 0;
+      if (filtroApontamento === 'sem') return totalApontamentos === 0;
+      if (filtroApontamento === 'aberto') return !!ordem.apontamento_aberto;
+
+      return true;
+    });
+  });
 
   setores = computed(() => {
     const values = new Set(
@@ -96,6 +109,7 @@ export class OsList implements OnInit {
     this.filtroPrioridade.set('');
     this.filtroTecnicoId.set('');
     this.filtroSetor.set('');
+    this.filtroApontamento.set('todos');
     this.load();
   }
 
@@ -163,6 +177,24 @@ export class OsList implements OnInit {
     }
 
     return 'NO PRAZO';
+  }
+
+  apontamentoLabel(ordem: OrdemServico): string {
+    if (ordem.apontamento_aberto) return 'EM ABERTO';
+    if ((ordem.apontamentos?.length ?? 0) > 0) return 'REGISTRADO';
+    return 'NENHUM';
+  }
+
+  apontamentoClass(ordem: OrdemServico): string {
+    if (ordem.apontamento_aberto) {
+      return 'bg-amber-900/40 text-amber-300';
+    }
+
+    if ((ordem.apontamentos?.length ?? 0) > 0) {
+      return 'bg-blue-900/40 text-blue-300';
+    }
+
+    return 'bg-slate-800 text-slate-400';
   }
 
   private slaLimiteHoras(prioridade: Prioridade): number {
