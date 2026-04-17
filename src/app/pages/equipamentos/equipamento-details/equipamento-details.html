@@ -57,27 +57,29 @@
 
         <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
           <h3 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Ordens de serviço relacionadas</h3>
-          <div class="space-y-4">
-            @for (os of osRelacionadas(); track os.id) {
-              <a [routerLink]="['/ordens-de-servico', os.id]"
-                class="block rounded-lg border border-slate-800 bg-slate-950/40 p-4 hover:border-blue-500/40 transition-colors">
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p class="text-blue-400 font-mono font-semibold">{{ os.numero }}</p>
-                    <p class="text-slate-100 font-medium mt-1">{{ os.descricao_falha }}</p>
-                    <p class="text-xs text-slate-500 mt-1">
-                      Solicitante: {{ os.solicitante.nome }} • Técnico: {{ os.tecnico?.nome || '—' }}
-                    </p>
+          <div class="history-scroll max-h-[30rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
+            <div class="space-y-4">
+              @for (os of osRelacionadas(); track os.id) {
+                <a [routerLink]="['/ordens-de-servico', os.id]"
+                  class="block rounded-lg border border-slate-800 bg-slate-950/40 p-4 hover:border-blue-500/40 transition-colors">
+                  <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p class="text-blue-400 font-mono font-semibold">{{ os.numero }}</p>
+                      <p class="text-slate-100 font-medium mt-1">{{ os.descricao_falha }}</p>
+                      <p class="text-xs text-slate-500 mt-1">
+                        Solicitante: {{ os.solicitante.nome }} • Técnico: {{ os.tecnico?.nome || '—' }}
+                      </p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs uppercase tracking-widest text-slate-500">{{ os.status | statusLabel }}</p>
+                      <p class="text-xs text-slate-500 mt-1">{{ os.abertura_em | date:'dd/MM/yyyy HH:mm' }}</p>
+                    </div>
                   </div>
-                  <div class="text-right">
-                    <p class="text-xs uppercase tracking-widest text-slate-500">{{ os.status | statusLabel }}</p>
-                    <p class="text-xs text-slate-500 mt-1">{{ os.abertura_em | date:'dd/MM/yyyy HH:mm' }}</p>
-                  </div>
-                </div>
-              </a>
-            } @empty {
-              <p class="text-slate-500 text-sm">Nenhuma O.S. vinculada a este equipamento.</p>
-            }
+                </a>
+              } @empty {
+                <p class="text-slate-500 text-sm">Nenhuma O.S. vinculada a este equipamento.</p>
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -91,16 +93,18 @@
 
         <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Histórico de manutenção</p>
-          <div class="space-y-3">
-            @for (os of osRelacionadas(); track os.id) {
-              <div class="relative pl-5">
-                <span class="absolute left-0 top-1 h-2.5 w-2.5 rounded-full bg-blue-500"></span>
-                <p class="text-sm text-slate-200 font-medium">{{ os.numero }}</p>
-                <p class="text-xs text-slate-500">{{ os.status | statusLabel }} • {{ os.abertura_em | date:'dd/MM/yyyy HH:mm' }}</p>
-              </div>
-            } @empty {
-              <p class="text-slate-500 text-sm">Sem histórico de manutenção registrado.</p>
-            }
+          <div class="history-scroll max-h-[24rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
+            <div class="space-y-3">
+              @for (os of osRelacionadas(); track os.id) {
+                <div class="relative pl-5">
+                  <span class="absolute left-0 top-1 h-2.5 w-2.5 rounded-full bg-blue-500"></span>
+                  <p class="text-sm text-slate-200 font-medium">{{ os.numero }}</p>
+                  <p class="text-xs text-slate-500">{{ os.status | statusLabel }} • {{ os.abertura_em | date:'dd/MM/yyyy HH:mm' }}</p>
+                </div>
+              } @empty {
+                <p class="text-slate-500 text-sm">Sem histórico de manutenção registrado.</p>
+              }
+            </div>
           </div>
         </div>
       </aside>

@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { OrdemServicoService } from '../../core/services/ordem-servico.service';
 import { OrdemServico, Prioridade, StatusOs } from '../../core/models/ordem-servico.model';
@@ -28,9 +29,11 @@ type SetorResumo = {
   concluidas: number;
 };
 
+type SlaFiltro = '' | 'NO_PRAZO' | 'ESTOURADO';
+
 @Component({
   selector: 'app-relatorios',
-  imports: [CommonModule, RouterLink, StatusLabelPipe],
+  imports: [CommonModule, FormsModule, RouterLink, StatusLabelPipe],
   templateUrl: './relatorios.html',
 })
 export class Relatorios implements OnInit {
@@ -39,25 +42,89 @@ export class Relatorios implements OnInit {
   ordens = signal<OrdemServico[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+  statusFiltro = signal<StatusOs | ''>('');
+  slaFiltro = signal<SlaFiltro>('');
+  tecnicoFiltro = signal('');
+  setorFiltro = signal('');
 
-  total = computed(() => this.ordens().length);
-  abertas = computed(() => this.ordens().filter((o) => o.status === StatusOs.ABERTA).length);
-  emAndamento = computed(() => this.ordens().filter((o) => o.status === StatusOs.EM_ANDAMENTO).length);
-  aguardandoPeca = computed(() => this.ordens().filter((o) => o.status === StatusOs.AGUARDANDO_PECA).length);
-  concluidas = computed(() => this.ordens().filter((o) => o.status === StatusOs.CONCLUIDA).length);
-  canceladas = computed(() => this.ordens().filter((o) => o.status === StatusOs.CANCELADA).length);
+  statusOptions = [
+    StatusOs.ABERTA,
+    StatusOs.EM_ANDAMENTO,
+    StatusOs.AGUARDANDO_PECA,
+    StatusOs.CONCLUIDA,
+    StatusOs.CANCELADA,
+  ];
+
+  tecnicosOptions = computed(() => {
+    const values = new Map<string, string>();
+
+    for (const ordem of this.ordens()) {
+      if (ordem.tecnico?.id && ordem.tecnico?.nome) {
+        values.set(String(ordem.tecnico.id), ordem.tecnico.nome);
+      }
+
+      for (const apontamento of ordem.apontamentos ?? []) {
+        const tecnicoId = String(apontamento.tecnico?.id ?? apontamento.tecnicoId);
+        const tecnicoNome = apontamento.tecnico?.nome;
+        if (tecnicoId && tecnicoNome) {
+          values.set(tecnicoId, tecnicoNome);
+        }
+      }
+    }
+
+    return Array.from(values.entries())
+      .map(([id, nome]) => ({ id, nome }))
+      .sort((a, b) => a.nome.localeCompare(b.nome));
+  });
+
+  setoresOptions = computed(() => {
+    const values = new Set(
+      this.ordens()
+        .map((ordem) => ordem.equipamento?.setor?.trim())
+        .filter((setor): setor is string => !!setor)
+    );
+
+    return Array.from(values).sort((a, b) => a.localeCompare(b));
+  });
+
+  ordensFiltradas = computed(() => {
+    const status = this.statusFiltro();
+    const sla = this.slaFiltro();
+    const tecnicoId = this.tecnicoFiltro();
+    const setor = this.setorFiltro();
+
+    return this.ordens().filter((o) => {
+      const matchStatus = !status || o.status === status;
+      const matchSla = !sla || this.slaLabel(o) === sla;
+      const matchSetor = !setor || (o.equipamento?.setor?.trim() || '') === setor;
+      const tecnicoAtualId = o.tecnico?.id ? String(o.tecnico.id) : '';
+      const matchTecnico =
+        !tecnicoId ||
+        tecnicoAtualId === tecnicoId ||
+        (o.apontamentos ?? []).some((apontamento) => String(apontamento.tecnico?.id ?? apontamento.tecnicoId) === tecnicoId);
+
+      return matchStatus && matchSla && matchSetor && matchTecnico;
+    });
+  });
+
+  total = computed(() => this.ordensFiltradas().length);
+  abertas = computed(() => this.ordensFiltradas().filter((o) => o.status === StatusOs.ABERTA).length);
+  emAndamento = computed(() => this.ordensFiltradas().filter((o) => o.status === StatusOs.EM_ANDAMENTO).length);
+  aguardandoPeca = computed(() => this.ordensFiltradas().filter((o) => o.status === StatusOs.AGUARDANDO_PECA).length);
+  concluidas = computed(() => this.ordensFiltradas().filter((o) => o.status === StatusOs.CONCLUIDA).length);
+  canceladas = computed(() => this.ordensFiltradas().filter((o) => o.status === StatusOs.CANCELADA).length);
   criticas = computed(() =>
-    this.ordens().filter(
+    this.ordensFiltradas().filter(
       (o) => o.prioridade === Prioridade.CRITICA && o.status !== StatusOs.CONCLUIDA && o.status !== StatusOs.CANCELADA
     ).length
   );
 
   totalHoras = computed(() =>
-    this.ordens().reduce((acc, o) => acc + (Number(o.horas_trabalhadas) || 0), 0)
+    this.ordensFiltradas().reduce((acc, o) => acc + (Number(o.horas_trabalhadas) || 0), 0)
   );
 
   tempoMedioConclusaoHoras = computed(() => {
-    const concluidas = this.ordens().filter((o) => !!o.conclusao_em);
+    const concluidas = this.ordensFiltradas().filter((o) => !!o.conclusao_em);
     if (!concluidas.length) return 0;
 
     const totalHoras = concluidas.reduce((acc, ordem) => {
@@ -103,7 +170,7 @@ export class Relatorios implements OnInit {
   ]);
 
   prioridadeSeries = computed<SerieItem[]>(() => {
-    const ordens = this.ordens();
+    const ordens = this.ordensFiltradas();
     const count = (prioridade: Prioridade) => ordens.filter((o) => o.prioridade === prioridade).length;
 
     return [
@@ -136,10 +203,12 @@ export class Relatorios implements OnInit {
 
   horasPorTecnico = computed<TecnicoResumo[]>(() => {
     const grupos = new Map<string, TecnicoResumo>();
+    const tecnicoSelecionado = this.tecnicoFiltro();
 
-    for (const ordem of this.ordens()) {
+    for (const ordem of this.ordensFiltradas()) {
       for (const apontamento of ordem.apontamentos ?? []) {
-        const tecnicoId = apontamento.tecnico?.id ?? apontamento.tecnicoId;
+        const tecnicoId = String(apontamento.tecnico?.id ?? apontamento.tecnicoId);
+        if (tecnicoSelecionado && tecnicoId !== tecnicoSelecionado) continue;
         const tecnicoNome = apontamento.tecnico?.nome ?? ordem.tecnico?.nome ?? 'Técnico não identificado';
         const grupo = grupos.get(tecnicoId) ?? {
           id: tecnicoId,
@@ -162,9 +231,10 @@ export class Relatorios implements OnInit {
       }
     }
 
-    for (const ordem of this.ordens()) {
-      const tecnicoId = ordem.tecnico?.id;
+    for (const ordem of this.ordensFiltradas()) {
+      const tecnicoId = ordem.tecnico?.id ? String(ordem.tecnico.id) : '';
       if (!tecnicoId) continue;
+      if (tecnicoSelecionado && tecnicoId !== tecnicoSelecionado) continue;
 
       const grupo = grupos.get(tecnicoId) ?? {
         id: tecnicoId,
@@ -195,7 +265,7 @@ export class Relatorios implements OnInit {
   ordensPorSetor = computed<SetorResumo[]>(() => {
     const grupos = new Map<string, SetorResumo>();
 
-    for (const ordem of this.ordens()) {
+    for (const ordem of this.ordensFiltradas()) {
       const setor = ordem.equipamento?.setor?.trim() || 'Não informado';
       const grupo = grupos.get(setor) ?? {
         setor,
@@ -218,7 +288,7 @@ export class Relatorios implements OnInit {
   });
 
   ordensRecentes = computed(() =>
-    [...this.ordens()]
+    [...this.ordensFiltradas()]
       .sort((a, b) => new Date(b.abertura_em).getTime() - new Date(a.abertura_em).getTime())
       .slice(0, 10)
   );
@@ -273,6 +343,36 @@ export class Relatorios implements OnInit {
         return 'text-yellow-400';
       case Prioridade.BAIXA:
         return 'text-slate-400';
+    }
+  }
+
+  slaLabel(ordem: OrdemServico): 'NO_PRAZO' | 'ESTOURADO' {
+    const limiteHoras = this.slaLimiteHoras(ordem.prioridade);
+    const base = new Date(ordem.inicio_em ?? ordem.abertura_em).getTime();
+    const fim = new Date(ordem.conclusao_em ?? new Date()).getTime();
+    const horas = (fim - base) / (1000 * 60 * 60);
+
+    if (ordem.status === StatusOs.CONCLUIDA && horas <= limiteHoras) {
+      return 'NO_PRAZO';
+    }
+
+    if (horas > limiteHoras) {
+      return 'ESTOURADO';
+    }
+
+    return 'NO_PRAZO';
+  }
+
+  private slaLimiteHoras(prioridade: Prioridade): number {
+    switch (prioridade) {
+      case Prioridade.CRITICA:
+        return 4;
+      case Prioridade.ALTA:
+        return 8;
+      case Prioridade.MEDIA:
+        return 24;
+      case Prioridade.BAIXA:
+        return 72;
     }
   }
 }

@@ -4,8 +4,61 @@
       <h1 class="text-3xl font-bold font-headline text-slate-100">Relatórios</h1>
       <p class="mt-1 text-sm text-slate-400">Visão gerencial da operação, da carga de trabalho e dos gargalos de manutenção.</p>
     </div>
-    <div class="rounded-2xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm text-slate-400">
-      Base atual: <span class="font-semibold text-slate-100">{{ total() }}</span> O.S. consolidadas
+    <div class="flex flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-center xl:justify-end">
+      <label class="rounded-2xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm text-slate-400">
+        <span class="mr-3 text-xs font-bold uppercase tracking-widest text-slate-500">Status</span>
+        <select
+          [ngModel]="statusFiltro()"
+          (ngModelChange)="statusFiltro.set($event)"
+          class="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Todos status</option>
+          @for (status of statusOptions; track status) {
+            <option [value]="status">{{ status | statusLabel }}</option>
+          }
+        </select>
+      </label>
+      <label class="rounded-2xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm text-slate-400">
+        <span class="mr-3 text-xs font-bold uppercase tracking-widest text-slate-500">SLA</span>
+        <select
+          [ngModel]="slaFiltro()"
+          (ngModelChange)="slaFiltro.set($event)"
+          class="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Todos SLA</option>
+          <option value="NO_PRAZO">No prazo</option>
+          <option value="ESTOURADO">Estourado</option>
+        </select>
+      </label>
+      <label class="rounded-2xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm text-slate-400">
+        <span class="mr-3 text-xs font-bold uppercase tracking-widest text-slate-500">Técnico</span>
+        <select
+          [ngModel]="tecnicoFiltro()"
+          (ngModelChange)="tecnicoFiltro.set($event)"
+          class="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Todos técnicos</option>
+          @for (tecnico of tecnicosOptions(); track tecnico.id) {
+            <option [value]="tecnico.id">{{ tecnico.nome }}</option>
+          }
+        </select>
+      </label>
+      <label class="rounded-2xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm text-slate-400">
+        <span class="mr-3 text-xs font-bold uppercase tracking-widest text-slate-500">Setor</span>
+        <select
+          [ngModel]="setorFiltro()"
+          (ngModelChange)="setorFiltro.set($event)"
+          class="rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Todos setores</option>
+          @for (setor of setoresOptions(); track setor) {
+            <option [value]="setor">{{ setor }}</option>
+          }
+        </select>
+      </label>
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm text-slate-400">
+        Base atual: <span class="font-semibold text-slate-100">{{ total() }}</span> O.S. consolidadas
+      </div>
     </div>
   </header>
 
@@ -47,6 +100,7 @@
           <p class="mt-2 text-sm text-slate-500">Leitura da fila por estágio operacional.</p>
         </div>
 
+        <div class="history-scroll max-h-[24rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
         <div class="space-y-4">
           @for (item of statusSeries(); track item.label) {
             <div class="space-y-2">
@@ -60,6 +114,7 @@
             </div>
           }
         </div>
+        </div>
       </section>
 
       <section class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
@@ -68,6 +123,7 @@
           <p class="mt-2 text-sm text-slate-500">Distribuição da urgência acumulada na operação.</p>
         </div>
 
+        <div class="history-scroll max-h-[24rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
         <div class="space-y-4">
           @for (item of prioridadeSeries(); track item.label) {
             <div class="space-y-2">
@@ -80,6 +136,7 @@
               </div>
             </div>
           }
+        </div>
         </div>
       </section>
     </div>
@@ -97,6 +154,7 @@
           </div>
         </div>
 
+        <div class="history-scroll max-h-[28rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
         <div class="space-y-4">
           @for (item of horasPorTecnico(); track item.id) {
             <div class="rounded-xl border border-slate-800 bg-slate-950/30 p-4">
@@ -118,6 +176,7 @@
             <p class="text-sm text-slate-500">Nenhum apontamento concluído disponível para consolidar por técnico.</p>
           }
         </div>
+        </div>
       </section>
 
       <section class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
@@ -126,6 +185,7 @@
           <p class="mt-2 text-sm text-slate-500">Ajuda a identificar quais áreas mais pressionam a manutenção.</p>
         </div>
 
+        <div class="history-scroll max-h-[28rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
         <div class="space-y-4">
           @for (item of ordensPorSetor(); track item.setor) {
             <div class="rounded-xl border border-slate-800 bg-slate-950/30 p-4">
@@ -147,6 +207,7 @@
             <p class="text-sm text-slate-500">Nenhum setor consolidado no período atual.</p>
           }
         </div>
+        </div>
       </section>
     </div>
 
@@ -157,6 +218,7 @@
           <p class="mt-2 text-sm text-slate-500">Leitura rápida de carga, fechamento e horas registradas por pessoa.</p>
         </div>
 
+        <div class="history-scroll max-h-[30rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
         <div class="space-y-3">
           @for (item of horasPorTecnico(); track item.id) {
             <div class="grid grid-cols-[1.5fr_repeat(3,auto)] items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/30 px-4 py-3 text-sm">
@@ -180,6 +242,7 @@
             <p class="text-sm text-slate-500">Sem técnicos com apontamentos ou atribuições registradas.</p>
           }
         </div>
+        </div>
       </section>
 
       <section class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
@@ -192,7 +255,7 @@
         </div>
 
         <div class="overflow-hidden rounded-xl border border-slate-800">
-          <div class="max-h-[28rem] overflow-y-auto">
+          <div class="history-scroll max-h-[30rem] overflow-y-auto">
             <table class="w-full text-left text-sm">
               <thead class="sticky top-0 bg-slate-950/95 text-[11px] uppercase tracking-widest text-slate-500">
                 <tr>

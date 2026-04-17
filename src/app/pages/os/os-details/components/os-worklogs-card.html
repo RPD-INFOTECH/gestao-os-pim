@@ -1,6 +1,7 @@
 <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
   <h2 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-4">Apontamentos de Trabalho</h2>
-  <div class="space-y-5">
+  <div class="history-scroll max-h-[34rem] overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/20 p-4 pr-2">
+    <div class="space-y-5">
     @for (grupo of grupos(); track grupo.tecnicoId) {
       <section class="rounded-xl border border-slate-800 bg-slate-950/30 p-4">
         <div class="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
@@ -37,5 +38,6 @@
     } @empty {
       <p class="text-slate-500 text-sm">Nenhum apontamento registrado.</p>
     }
+    </div>
   </div>
 </div>
