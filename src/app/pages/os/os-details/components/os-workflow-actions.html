@@ -2,7 +2,7 @@
   @if (canAssumir()) {
     <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-6">
       <h3 class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">Assumir O.S.</h3>
-      <p class="text-sm text-slate-400 mb-4">Puxe esta ordem para sua fila e torne-se o técnico responsável.</p>
+      <p class="text-sm text-slate-400 mb-4">Atribui a ordem ao técnico autenticado.</p>
       <button
         (click)="assumirClicked.emit()"
         [disabled]="action() === 'assumir'"

@@ -1,4 +1,6 @@
+import { inject } from '@angular/core';
 import { CanDeactivateFn } from '@angular/router';
+import { ConfirmationService } from '../../shared/confirm/confirmation.service';
 
 export interface PendingChangesComponent {
   hasUnsavedChanges: () => boolean;
@@ -9,5 +11,13 @@ export const pendingChangesGuard: CanDeactivateFn<PendingChangesComponent> = (co
     return true;
   }
 
-  return window.confirm('Há dados não salvos neste formulário. Deseja sair mesmo assim?');
+  const confirmation = inject(ConfirmationService);
+
+  return confirmation.confirm({
+    title: 'Descartar alterações',
+    message: 'Há dados não salvos neste formulário. Deseja sair sem salvar?',
+    confirmLabel: 'Sair',
+    cancelLabel: 'Continuar editando',
+    tone: 'warning',
+  });
 };

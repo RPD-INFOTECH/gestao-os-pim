@@ -1,0 +1,28 @@
+@if (confirm.active(); as request) {
+  <section class="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm">
+    <article class="w-full max-w-md rounded-2xl border p-6 shadow-2xl" [class]="toneClass(request.tone)">
+      <div class="mb-5">
+        <h2 class="text-lg font-bold text-slate-100">{{ request.title }}</h2>
+        <p class="mt-2 text-sm text-slate-300">{{ request.message }}</p>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          class="rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition-colors hover:bg-slate-800"
+          (click)="confirm.cancel()"
+        >
+          {{ request.cancelLabel || 'Cancelar' }}
+        </button>
+        <button
+          type="button"
+          class="rounded-xl px-4 py-2 text-sm font-semibold text-white transition-colors"
+          [class]="confirmButtonClass(request.tone)"
+          (click)="confirm.accept()"
+        >
+          {{ request.confirmLabel || 'Confirmar' }}
+        </button>
+      </div>
+    </article>
+  </section>
+}
