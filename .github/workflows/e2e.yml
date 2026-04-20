@@ -63,7 +63,11 @@ jobs:
           docker compose -f docker-compose.e2e.yml logs frontend
           exit 1
 
-      - name: Seed test database
+      - name: Run backend seed (usuários e dados @seed.local)
+        working-directory: gestao-os-pim-Patrese
+        run: docker compose -f docker-compose.e2e.yml exec -T api node dist/src/scripts/seed.js
+
+      - name: Seed test database (usuário admin CI)
         working-directory: gestao-os-pim-Patrese
         run: bash cypress/seeds/seed-e2e.sh
 
