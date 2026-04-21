@@ -13,7 +13,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAppInitializer(() => {
       const auth = inject(AuthService);
-      if (!auth.hasSavedRefreshToken()) return of(null);
+      // Sempre tenta recuperar a sessão via cookie httpOnly.
+      // Se o cookie expirou ou não existe, o catch descarta silenciosamente.
       return auth.refresh().pipe(catchError(() => of(null)));
     }),
   ],

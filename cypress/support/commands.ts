@@ -11,6 +11,8 @@ Cypress.Commands.add('login', (email?: string, senha?: string) => {
   const userEmail = email ?? Cypress.env('supervisor_email');
   const userSenha = senha ?? Cypress.env('supervisor_senha');
 
+  // cy.request compartilha o cookie jar com o browser — o refreshToken
+  // httpOnly é setado automaticamente pelo Set-Cookie da resposta.
   cy.request({
     method: 'POST',
     url: '/api/auth/login',
@@ -18,10 +20,6 @@ Cypress.Commands.add('login', (email?: string, senha?: string) => {
     failOnStatusCode: false,
   }).then((response) => {
     expect(response.status, `Login falhou para ${userEmail}: ${JSON.stringify(response.body)}`).to.eq(200);
-    const { refreshToken } = response.body;
-    cy.window().then((win) => {
-      win.localStorage.setItem('refreshToken', refreshToken);
-    });
     cy.visit('/dashboard');
     cy.url({ timeout: 15000 }).should('include', '/dashboard');
   });

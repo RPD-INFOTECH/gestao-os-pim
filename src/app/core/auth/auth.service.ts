@@ -13,13 +13,11 @@ interface AuthState {
 
 interface LoginResponse {
   accessToken: string;
-  refreshToken: string;
   usuario: Usuario;
 }
 
 interface RefreshResponse {
   accessToken: string;
-  refreshToken: string;
 }
 
 interface AccessTokenPayload {
@@ -27,8 +25,6 @@ interface AccessTokenPayload {
   email: string;
   perfil: Perfil;
 }
-
-const REFRESH_TOKEN_KEY = 'refreshToken';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -44,23 +40,19 @@ export class AuthService {
 
   login(email: string, senha: string): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { email, senha })
+      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { email, senha }, { withCredentials: true })
       .pipe(
         tap((res) => {
-          localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
           this.state.set({ usuario: res.usuario, accessToken: res.accessToken });
         }),
       );
   }
 
   refresh(): Observable<RefreshResponse> {
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY) ?? '';
-
     return this.http
-      .post<RefreshResponse>(`${environment.apiUrl}/auth/refresh`, { refreshToken })
+      .post<RefreshResponse>(`${environment.apiUrl}/auth/refresh`, {}, { withCredentials: true })
       .pipe(
         tap((res) => {
-          localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
           const payload = this.decodeJwt(res.accessToken);
           const usuario: Usuario | null = payload
             ? {
@@ -97,18 +89,14 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-    this.state.set({ usuario: null, accessToken: null });
-    this.router.navigate(['/login']);
+    this.http
+      .post(`${environment.apiUrl}/auth/logout`, {}, { withCredentials: true })
+      .subscribe({ complete: () => this.clearSession() });
   }
 
   clearSession(): void {
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.state.set({ usuario: null, accessToken: null });
-  }
-
-  hasSavedRefreshToken(): boolean {
-    return !!localStorage.getItem(REFRESH_TOKEN_KEY);
+    this.router.navigate(['/login']);
   }
 
   hasRole(perfil: Perfil): boolean {
