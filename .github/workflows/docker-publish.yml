@@ -134,7 +134,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=1.0.0
             type=raw,value=latest
 
       - name: Build and push
@@ -145,5 +144,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Redeploy stack no Portainer
-        run: curl -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}"
+      - name: Redeploy stack no Portainer com pull da imagem
+        run: |
+          curl -s -X POST "http://45.84.243.199:9000/api/stacks/125/git/redeploy" \
+            -H "X-API-Key: ${{ secrets.PORTAINER_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"pullImage": true, "repositoryAuthentication": false}'
