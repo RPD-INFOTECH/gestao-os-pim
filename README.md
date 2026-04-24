@@ -331,3 +331,4 @@ Hoje eles cobrem principalmente:
 - a API é consumida via `/api`
 - as telas principais foram separadas por domínio
 - a navegação autenticada é centralizada em `MainLayout` + `Navbar`
+
