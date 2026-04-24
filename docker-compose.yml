@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ghcr.io/patrese-ebs/gestao-os-pim-patrese:1.0.0
+    image: ghcr.io/rpd-infotech/gestao-os-pim:1.0.0
     ports:
       - "3000:80"
     depends_on:
