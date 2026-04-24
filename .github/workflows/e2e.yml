@@ -20,7 +20,8 @@ jobs:
       - name: Checkout API
         uses: actions/checkout@v4
         with:
-          repository: patrese-ebs/servicoPim-API-Patrese
+          repository: rb3z3rra/servicoPim-API
+          ref: ${{ github.head_ref || github.ref_name }}
           path: servicoPim-API-Patrese
 
       - name: Setup Node.js

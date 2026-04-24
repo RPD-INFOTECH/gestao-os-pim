@@ -32,8 +32,5 @@ describe('Autenticação', () => {
     cy.loginAsSupervisor();
     cy.get('[data-cy="btn-logout"]').click();
     cy.url().should('include', '/login');
-    cy.window().then((win) => {
-      expect(win.localStorage.getItem('refreshToken')).to.be.null;
-    });
   });
 });

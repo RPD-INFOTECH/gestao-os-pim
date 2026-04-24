@@ -15,7 +15,7 @@ describe('Login', () => {
         {
           provide: AuthService,
           useValue: {
-            login: () => of({ accessToken: 'token', refreshToken: 'refresh', usuario: null }),
+            login: () => of({ accessToken: 'token', usuario: null }),
           },
         },
         {
