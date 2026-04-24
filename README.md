@@ -332,3 +332,4 @@ Hoje eles cobrem principalmente:
 - as telas principais foram separadas por domínio
 - a navegação autenticada é centralizada em `MainLayout` + `Navbar`
 
+
