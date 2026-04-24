@@ -134,6 +134,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
+            type=raw,value=1.0.0
             type=raw,value=latest
 
       - name: Build and push
