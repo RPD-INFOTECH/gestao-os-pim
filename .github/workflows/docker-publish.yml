@@ -30,6 +30,7 @@ jobs:
         run: npm run build
 
   build-and-push:
+    needs: e2e
     runs-on: ubuntu-latest
     needs: validate
     permissions:

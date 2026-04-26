@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
 
   api:
-    image: ghcr.io/patrese-ebs/servicopim-api-patrese:latest
+    image: ghcr.io/rpd-infotech/servicopim-api:latest
     environment:
       PORT: 9090
       DB_HOST: postgres
@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ghcr.io/patrese-ebs/gestao-os-pim-patrese:latest
+    image: ghcr.io/rpd-infotech/gestao-os-pim:latest
     ports:
       - "3000:80"
     depends_on:
