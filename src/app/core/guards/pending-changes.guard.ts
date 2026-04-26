@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanDeactivateFn } from '@angular/router';
-import { ConfirmationService } from '../../shared/confirm/confirmation.service';
+import { ConfirmationService } from '@shared/components/confirm/confirmation.service';
 
 export interface PendingChangesComponent {
   hasUnsavedChanges: () => boolean;

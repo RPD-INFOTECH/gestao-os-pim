@@ -7,7 +7,7 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: "0 6 * * 1"
 
 jobs:
   cypress:
@@ -17,101 +17,37 @@ jobs:
       - name: Checkout frontend
         uses: actions/checkout@v4
         with:
-          path: gestao-os-pim-Patrese
+          path: gestao-os-pim
 
       - name: Checkout API
         uses: actions/checkout@v4
         with:
           repository: patrese-ebs/servicoPim-API-Patrese
-          path: servicoPim-API-Patrese
+          path: servicoPim-API
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: gestao-os-pim-Patrese/package-lock.json
-
-      - name: Start E2E environment
-        working-directory: gestao-os-pim-Patrese
-        run: docker compose -f docker-compose.e2e.yml up -d --build
-
-      - name: Wait for frontend and API (via nginx proxy)
-        working-directory: gestao-os-pim-Patrese
-        run: |
-          echo "Aguardando frontend em localhost:3000..."
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:3000 > /dev/null; then
-              echo "Frontend respondendo!"
-              break
-            fi
-            echo "Tentativa $i/30..."
-            sleep 3
-          done
-          echo "Aguardando API via proxy nginx em localhost:3000/api/health..."
-          for i in $(seq 1 60); do
-            if curl -sf http://localhost:3000/api/health > /dev/null; then
-              echo "API pronta!"
-              exit 0
-            fi
-            echo "Tentativa $i/60..."
-            sleep 5
-          done
-          echo "ERRO: API nao ficou pronta em 5 minutos"
-          docker compose -f docker-compose.e2e.yml ps
-          docker compose -f docker-compose.e2e.yml logs api
-          docker compose -f docker-compose.e2e.yml logs frontend
-          exit 1
-
-      - name: Run backend seed (usuários e dados @seed.local)
-        working-directory: gestao-os-pim-Patrese
-        run: docker compose -f docker-compose.e2e.yml exec -T api node dist/src/scripts/seed.js
-
-      - name: Seed test database (usuário admin CI)
-        working-directory: gestao-os-pim-Patrese
-        run: bash cypress/seeds/seed-e2e.sh
-
-      - name: Override baseUrl in cypress.config.ts
-        working-directory: gestao-os-pim-Patrese
-        run: |
-          sed -i "s|baseUrl: '[^']*'|baseUrl: 'http://localhost:3000'|" cypress.config.ts
-          echo "--- cypress.config.ts ---"
-          cat cypress.config.ts
+          cache-dependency-path: gestao-os-pim/package-lock.json
 
       - name: Install frontend dependencies
-        working-directory: gestao-os-pim-Patrese
-        run: npm install
+        working-directory: gestao-os-pim
+        run: npm ci
 
-      - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: gestao-os-pim-Patrese
-          browser: chrome
-          headed: false
-          install: false
+      - name: Run Cypress E2E suite
+        working-directory: gestao-os-pim
+        run: bash src/scripts/test-e2e.sh
         env:
-          CYPRESS_supervisor_email: admin@pim.com
-          CYPRESS_supervisor_senha: Admin@123
+          CYPRESS_BASE_URL: http://localhost:3000
+          CYPRESS_supervisor_email: supervisor@seed.local
+          CYPRESS_supervisor_senha: seed123
 
       - name: Upload screenshots on failure
-        uses: actions/upload-artifact@v4
         if: failure()
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots
-          path: gestao-os-pim-Patrese/cypress/screenshots
-
-      - name: Show docker logs on failure
-        if: failure()
-        working-directory: gestao-os-pim-Patrese
-        run: |
-          echo "=== docker compose ps ==="
-          docker compose -f docker-compose.e2e.yml ps
-          echo "=== API logs ==="
-          docker compose -f docker-compose.e2e.yml logs api
-          echo "=== Frontend logs ==="
-          docker compose -f docker-compose.e2e.yml logs frontend
-
-      - name: Teardown E2E environment
-        if: always()
-        working-directory: gestao-os-pim-Patrese
-        run: docker compose -f docker-compose.e2e.yml down -v
+          path: gestao-os-pim/cypress/screenshots
+          if-no-files-found: ignore

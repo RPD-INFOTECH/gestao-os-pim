@@ -1,6 +1,7 @@
 import dadosTeste from '../fixtures/dados-teste.json';
 
 const eq = dadosTeste.equipamento;
+const solicitante = dadosTeste.usuario_solicitante;
 
 describe('Equipamentos', () => {
   beforeEach(() => {
@@ -12,58 +13,73 @@ describe('Equipamentos', () => {
     cy.visit('/equipamentos');
     cy.url().should('include', '/equipamentos');
     cy.wait('@getEquipamentos').its('response.statusCode').should('eq', 200);
+    cy.contains('Equipamentos').should('be.visible');
+  });
+
+  it('exige os campos obrigatórios no formulário', () => {
+    cy.visit('/equipamentos/novo');
+    cy.get('button[type="submit"]').should('be.disabled');
+
+    cy.get('[data-cy="eq-codigo"]').type('EQ-OBRIG');
+    cy.get('[data-cy="eq-nome"]').type('Equipamento Obrigatório');
+    cy.get('[data-cy="eq-tipo"]').type('Compressor');
+    cy.get('[data-cy="eq-localizacao"]').type('Linha de Teste');
+    cy.get('[data-cy="eq-setor"]').type('Produção');
+
+    cy.get('button[type="submit"]').should('not.be.disabled');
   });
 
   it('cria um equipamento', () => {
-    const codigoUnico = eq.codigo + '-' + Date.now();
+    const codigoUnico = `${eq.codigo}-${Date.now()}`;
+    const nomeUnico = `${eq.nome} Novo ${Date.now()}`;
 
     cy.intercept('POST', '/api/equipamentos').as('createEquipamento');
     cy.visit('/equipamentos/novo');
-    cy.get('form').should('be.visible');
 
-    cy.get('[data-cy="eq-codigo"]').should('be.visible').type(codigoUnico);
-    cy.get('[data-cy="eq-nome"]').should('be.visible').type(eq.nome + ' Novo');
-    cy.get('[data-cy="eq-tipo"]').should('be.visible').type(eq.tipo);
-    cy.get('[data-cy="eq-localizacao"]').should('be.visible').type(eq.localizacao);
-    cy.get('[data-cy="eq-setor"]').should('be.visible').clear().type(eq.setor);
-
-    cy.get('button[type="submit"]').should('not.be.disabled').click();
+    cy.get('[data-cy="eq-codigo"]').type(codigoUnico);
+    cy.get('[data-cy="eq-nome"]').type(nomeUnico);
+    cy.get('[data-cy="eq-tipo"]').type(eq.tipo);
+    cy.get('[data-cy="eq-localizacao"]').type(eq.localizacao);
+    cy.get('[data-cy="eq-setor"]').clear().type(eq.setor);
+    cy.get('button[type="submit"]').click();
 
     cy.wait('@createEquipamento').its('response.statusCode').should('eq', 201);
-    cy.url().should('not.include', '/novo');
-    cy.contains(eq.nome + ' Novo', { timeout: 15000 }).should('be.visible');
+    cy.url().should('include', '/equipamentos');
+    cy.contains(nomeUnico, { timeout: 15000 }).should('be.visible');
   });
 
-  it('exibe detalhes de um equipamento', () => {
+  it('exibe detalhes e permite editar um equipamento', () => {
+    const nomeEditado = `${eq.nome} Editado ${Date.now()}`;
+
     cy.visit('/equipamentos');
-    cy.contains(eq.nome).should('be.visible').click();
+    cy.contains(eq.nome).click();
     cy.url().should('match', /\/equipamentos\/\d+/);
     cy.contains(eq.codigo).should('be.visible');
+
+    cy.get('[data-cy="btn-editar-equipamento"]').click();
+    cy.get('[data-cy="eq-nome"]').clear().type(nomeEditado);
+    cy.get('button[type="submit"]').click();
+
+    cy.url().should('include', '/equipamentos');
+    cy.contains(nomeEditado, { timeout: 15000 }).should('be.visible');
   });
 
-  it('edita um equipamento', () => {
+  it('desativa um equipamento existente', () => {
     cy.visit('/equipamentos');
-    cy.contains(eq.nome).should('be.visible').click();
-    cy.get('[data-cy="btn-editar-equipamento"]').should('be.visible').click();
-    cy.get('[data-cy="eq-nome"]').should('be.visible').clear().type(`${eq.nome} Editado`);
-    cy.get('button[type="submit"]').should('not.be.disabled').click();
-    cy.contains(`${eq.nome} Editado`, { timeout: 10000 }).should('be.visible');
-  });
+    cy.contains('[data-cy="equipamento-item"]', eq.nome, { timeout: 15000 })
+      .find('[data-cy="btn-deletar"]')
+      .click({ force: true });
 
-  it('desativa um equipamento', () => {
-    cy.visit('/equipamentos');
-    // Esperar a linha aparecer
-    cy.contains(`${eq.nome} Editado`, { timeout: 10000 }).should('be.visible');
-    
-    cy.get('[data-cy="equipamento-item"]').contains(`${eq.nome} Editado`)
-      .parents('[data-cy="equipamento-item"]')
-      .find('[data-cy="btn-deletar"]').click({ force: true });
-      
-    cy.get('button').contains(/Desativar|Confirmar/i).should('be.visible').click();
-    
-    cy.get('[data-cy="equipamento-item"]').contains(`${eq.nome} Editado`)
-      .parents('[data-cy="equipamento-item"]')
+    cy.contains('button', /Desativar|Confirmar/i).click();
+    cy.contains('[data-cy="equipamento-item"]', eq.nome)
       .contains('Inativo', { matchCase: false })
       .should('be.visible');
+  });
+
+  it('bloqueia solicitante na área de equipamentos', () => {
+    cy.login(solicitante.email, solicitante.senha);
+    cy.visit('/equipamentos');
+    cy.url({ timeout: 15000 }).should('include', '/403');
+    cy.contains('Acesso Negado').should('be.visible');
   });
 });

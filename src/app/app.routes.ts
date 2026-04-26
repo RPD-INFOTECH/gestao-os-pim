@@ -1,106 +1,54 @@
 import { Routes } from '@angular/router';
-import { MainLayout } from './layouts/main-layout/main-layout';
-import { Login } from './pages/login/login';
-import { Dashboard } from './pages/dashboard/dashboard';
-import { OsList } from './pages/os/os-list/os-list';
-import { OsDetails } from './pages/os/os-details/os-details';
-import { NovaOs } from './pages/os/nova-os/nova-os';
-import { Equipamentos } from './pages/equipamentos/equipamentos';
-import { EquipamentoForm } from './pages/equipamentos/equipamento-form/equipamento-form';
-import { EquipamentoDetails } from './pages/equipamentos/equipamento-details/equipamento-details';
-import { UsuariosList } from './pages/usuarios/usuarios-list/usuarios-list';
-import { UsuarioForm } from './pages/usuarios/usuario-form/usuario-form';
-import { UsuarioDetailsPage } from './pages/usuarios/usuario-details/usuario-details';
-import { Historico } from './pages/historico/historico';
-import { Relatorios } from './pages/relatorios/relatorios';
-import { Forbidden } from './pages/errors/forbidden/forbidden';
-import { NotFound } from './pages/errors/not-found/not-found';
-import { authGuard } from './core/auth/auth.guard';
-import { roleGuard } from './core/auth/role.guard';
-import { pendingChangesGuard } from './core/guards/pending-changes.guard';
-import { Perfil } from './core/models/perfil.enum';
+import { authGuard } from '@core/guards/auth.guard';
+import { MainLayout } from '@shared/layouts/main-layout/main-layout';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: Login },
+  {
+    path: 'login',
+    loadChildren: () => import('@features/auth/feature.routes').then((m) => m.AUTH_ROUTES),
+  },
   {
     path: '',
     component: MainLayout,
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: Dashboard },
-
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('@features/dashboard/feature.routes').then((m) => m.DASHBOARD_ROUTES),
+      },
       {
         path: 'ordens-de-servico',
-        component: OsList,
+        loadChildren: () =>
+          import('@features/ordens-servico/feature.routes').then(
+            (m) => m.ORDENS_SERVICO_ROUTES,
+          ),
       },
-      {
-        path: 'ordens-de-servico/nova',
-        component: NovaOs,
-        canActivate: [roleGuard(Perfil.SOLICITANTE, Perfil.SUPERVISOR)],
-        canDeactivate: [pendingChangesGuard],
-      },
-      {
-        path: 'ordens-de-servico/:id',
-        component: OsDetails,
-      },
-
       {
         path: 'equipamentos',
-        component: Equipamentos,
-        canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR)],
+        loadChildren: () =>
+          import('@features/equipamentos/feature.routes').then((m) => m.EQUIPAMENTOS_ROUTES),
       },
-      {
-        path: 'equipamentos/novo',
-        component: EquipamentoForm,
-        canActivate: [roleGuard(Perfil.SUPERVISOR)],
-      },
-      {
-        path: 'equipamentos/:id/editar',
-        component: EquipamentoForm,
-        canActivate: [roleGuard(Perfil.SUPERVISOR)],
-      },
-      {
-        path: 'equipamentos/:id',
-        component: EquipamentoDetails,
-        canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR)],
-      },
-
       {
         path: 'usuarios',
-        component: UsuariosList,
-        canActivate: [roleGuard(Perfil.SUPERVISOR)],
+        loadChildren: () =>
+          import('@features/usuarios/feature.routes').then((m) => m.USUARIOS_ROUTES),
       },
-      {
-        path: 'usuarios/novo',
-        component: UsuarioForm,
-        canActivate: [roleGuard(Perfil.SUPERVISOR)],
-      },
-      {
-        path: 'usuarios/:id/detalhes',
-        component: UsuarioDetailsPage,
-        canActivate: [roleGuard(Perfil.SUPERVISOR)],
-      },
-      {
-        path: 'usuarios/:id',
-        component: UsuarioForm,
-        canActivate: [roleGuard(Perfil.SUPERVISOR)],
-      },
-
       {
         path: 'historico',
-        component: Historico,
-        canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.TECNICO)],
+        loadChildren: () =>
+          import('@features/historico/feature.routes').then((m) => m.HISTORICO_ROUTES),
       },
-
       {
         path: 'relatorios',
-        component: Relatorios,
-        canActivate: [roleGuard(Perfil.SUPERVISOR)],
+        loadChildren: () =>
+          import('@features/relatorios/feature.routes').then((m) => m.RELATORIOS_ROUTES),
       },
-
-      { path: '403', component: Forbidden },
-      { path: '404', component: NotFound },
+      {
+        path: '',
+        loadChildren: () => import('@features/errors/feature.routes').then((m) => m.ERROR_ROUTES),
+      },
     ],
   },
   { path: '**', redirectTo: '404' },

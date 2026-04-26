@@ -13,7 +13,7 @@ services:
 
   api:
     build:
-      context: ../servicoPim-API-Patrese
+      context: ../servicoPim-API
       dockerfile: dockerfile
     environment:
       PORT: 9090
@@ -22,7 +22,7 @@ services:
       DB_USER: postgres
       DB_PASS: postgres
       DB_NAME: servicopim_e2e
-      NODE_ENV: production
+      NODE_ENV: development
       JWT_ACCESS_SECRET: e2e_access_secret_test
       JWT_REFRESH_SECRET: e2e_refresh_secret_test
       DB_LOGGING: "false"
