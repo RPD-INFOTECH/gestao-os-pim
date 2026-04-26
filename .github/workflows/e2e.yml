@@ -14,17 +14,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout do frontend
       - name: Checkout frontend
         uses: actions/checkout@v4
         with:
           path: gestao-os-pim
 
+      # Checkout da API (backend)
       - name: Checkout API
         uses: actions/checkout@v4
         with:
           repository: patrese-ebs/servicoPim-API-Patrese
           path: servicoPim-API
 
+      # Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -32,18 +35,26 @@ jobs:
           cache: "npm"
           cache-dependency-path: gestao-os-pim/package-lock.json
 
+      # Instala dependências do front
       - name: Install frontend dependencies
         working-directory: gestao-os-pim
         run: npm ci
 
+      # Cria o .env.e2e (CORREÇÃO PRINCIPAL)
+      - name: Create .env.e2e
+        working-directory: gestao-os-pim
+        run: |
+          echo "CYPRESS_baseUrl=http://localhost:3000" >> .env.e2e
+          echo "CYPRESS_API_URL=http://localhost:9090" >> .env.e2e
+          echo "CYPRESS_supervisor_email=supervisor@seed.local" >> .env.e2e
+          echo "CYPRESS_supervisor_senha=seed123" >> .env.e2e
+
+      # Executa testes E2E
       - name: Run Cypress E2E suite
         working-directory: gestao-os-pim
         run: bash src/scripts/test-e2e.sh
-        env:
-          CYPRESS_BASE_URL: http://localhost:3000
-          CYPRESS_supervisor_email: supervisor@seed.local
-          CYPRESS_supervisor_senha: seed123
 
+      # Upload screenshots em caso de erro
       - name: Upload screenshots on failure
         if: failure()
         uses: actions/upload-artifact@v4
