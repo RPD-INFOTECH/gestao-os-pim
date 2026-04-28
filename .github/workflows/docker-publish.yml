@@ -129,10 +129,6 @@ jobs:
       contents: read
       packages: write
 
-    env:
-      PORTAINER_TOKEN: ${{ secrets.PORTAINER_TOKEN }}
-      PORTAINER_WEBHOOK_URL: ${{ secrets.PORTAINER_WEBHOOK_URL }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -153,8 +149,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=sha
+            type=raw,value=latest
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -167,14 +162,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Redeploy stack no Portainer via webhook
-        if: env.PORTAINER_WEBHOOK_URL != ''
-        run: curl -fsS -X POST "${PORTAINER_WEBHOOK_URL}"
-
       - name: Redeploy stack no Portainer com pull da imagem
-        if: env.PORTAINER_WEBHOOK_URL == '' && env.PORTAINER_TOKEN != ''
         run: |
-          curl -fsS -X POST "http://45.84.243.199:9000/api/stacks/125/git/redeploy" \
-            -H "X-API-Key: ${PORTAINER_TOKEN}" \
+          curl -s -X POST "http://45.84.243.199:9000/api/stacks/125/git/redeploy" \
+            -H "X-API-Key: ${{ secrets.PORTAINER_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{"pullImage": true, "repositoryAuthentication": false}'
