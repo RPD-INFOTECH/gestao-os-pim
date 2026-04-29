@@ -4,10 +4,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UsuarioService } from '@features/usuarios/services/usuario.service';
 import { UsuarioDetails } from '@shared/models/usuario.model';
 import { BackButton } from '@shared/components/back-button/back-button';
+import { TempoTrabalhadoPipe } from '@shared/ui/tempo-trabalhado.pipe';
 
 @Component({
   selector: 'app-usuario-details',
-  imports: [CommonModule, RouterLink, BackButton],
+  imports: [CommonModule, RouterLink, BackButton, TempoTrabalhadoPipe],
   templateUrl: './usuario-details.html',
 })
 export class UsuarioDetailsPage implements OnInit {

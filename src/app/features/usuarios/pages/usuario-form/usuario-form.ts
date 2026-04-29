@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -7,6 +7,7 @@ import { Perfil } from '@core/models/perfil.enum';
 import { CreateUsuarioDto, UpdateUsuarioDto } from '@shared/models/usuario.model';
 import { ToastService } from '@shared/components/toast/toast.service';
 import { BackButton } from '@shared/components/back-button/back-button';
+import { AuthService } from '@core/auth/auth.service';
 
 @Component({
   selector: 'app-usuario-form',
@@ -18,8 +19,21 @@ export class UsuarioForm implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toast = inject(ToastService);
+  private auth = inject(AuthService);
 
-  perfis = Object.values(Perfil);
+  perfis = computed(() => {
+    const perfil = this.auth.currentPerfil();
+
+    if (perfil === Perfil.GESTOR) {
+      return [Perfil.SUPERVISOR, Perfil.TECNICO, Perfil.SOLICITANTE];
+    }
+
+    if (perfil === Perfil.SUPERVISOR) {
+      return [Perfil.TECNICO, Perfil.SOLICITANTE];
+    }
+
+    return [];
+  });
   isEdit = signal(false);
   loading = signal(false);
   error = signal<string | null>(null);
@@ -60,6 +74,10 @@ export class UsuarioForm implements OnInit {
         },
       });
     }
+
+    if (!id && this.perfis().length > 0) {
+      this.model.perfil = this.perfis()[0];
+    }
   }
 
   onSubmit(): void {
@@ -90,7 +108,6 @@ export class UsuarioForm implements OnInit {
       const dto: CreateUsuarioDto = {
         nome: this.model.nome,
         email: this.model.email,
-        matricula: this.model.matricula,
         senha: this.model.senha,
         perfil: this.model.perfil,
         setor: this.model.setor || null,

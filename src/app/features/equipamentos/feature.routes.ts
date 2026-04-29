@@ -9,7 +9,7 @@ export const EQUIPAMENTOS_ROUTES: Routes = [
   {
     path: '',
     component: Equipamentos,
-    canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR)],
+    canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR, Perfil.GESTOR)],
   },
   {
     path: 'novo',
@@ -24,6 +24,6 @@ export const EQUIPAMENTOS_ROUTES: Routes = [
   {
     path: ':id',
     component: EquipamentoDetails,
-    canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR)],
+    canActivate: [roleGuard(Perfil.TECNICO, Perfil.SUPERVISOR, Perfil.GESTOR)],
   },
 ];

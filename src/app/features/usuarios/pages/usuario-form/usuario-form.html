@@ -26,11 +26,18 @@
         <input data-cy="user-email" name="email" type="email" [(ngModel)]="model.email" required
           class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none" />
       </div>
+      @if (isEdit()) {
       <div>
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Matrícula *</label>
-        <input data-cy="user-matricula" name="matricula" [(ngModel)]="model.matricula" required
-          class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none font-mono" />
+        <input data-cy="user-matricula" name="matricula" [(ngModel)]="model.matricula" readonly
+          class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-400 focus:ring-2 focus:ring-blue-500 outline-none font-mono" />
       </div>
+      } @else {
+      <div class="rounded-lg border border-blue-900/40 bg-blue-950/20 p-3">
+        <p class="text-[10px] uppercase tracking-widest text-blue-300 font-bold mb-1">Matrícula automática</p>
+        <p class="text-sm text-slate-300">O sistema vai gerar a matrícula ao salvar o usuário.</p>
+      </div>
+      }
     </div>
 
     <div>
@@ -46,7 +53,7 @@
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Perfil *</label>
         <select data-cy="user-perfil" name="perfil" [(ngModel)]="model.perfil" required
           class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none">
-          @for (p of perfis; track p) {
+          @for (p of perfis(); track p) {
             <option [value]="p">{{ p }}</option>
           }
         </select>

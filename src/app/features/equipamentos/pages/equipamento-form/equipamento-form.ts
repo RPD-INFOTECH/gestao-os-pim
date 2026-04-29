@@ -72,7 +72,6 @@ export class EquipamentoForm implements OnInit {
     this.error.set(null);
 
     const payload = {
-      codigo: this.model.codigo,
       nome: this.model.nome,
       tipo: this.model.tipo,
       localizacao: this.model.localizacao,
@@ -85,7 +84,7 @@ export class EquipamentoForm implements OnInit {
     };
 
     if (this.isEdit()) {
-      this.service.update(this.id()!, payload as UpdateEquipamentoDto).subscribe({
+      this.service.update(this.id()!, { ...payload, codigo: this.model.codigo } as UpdateEquipamentoDto).subscribe({
         next: () => {
           this.toast.success('Equipamento atualizado com sucesso.');
           this.router.navigate(['/equipamentos']);

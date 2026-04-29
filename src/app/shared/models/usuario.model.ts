@@ -22,7 +22,7 @@ export interface UsuarioDetails extends Usuario {
 export interface CreateUsuarioDto {
   nome: string;
   email: string;
-  matricula: string;
+  matricula?: string;
   senha: string;
   perfil: Perfil;
   setor?: string | null;

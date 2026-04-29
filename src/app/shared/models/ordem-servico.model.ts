@@ -9,6 +9,13 @@ export enum StatusOs {
   CANCELADA = 'CANCELADA',
 }
 
+export enum StatusPrazoOs {
+  NO_PRAZO = 'NO_PRAZO',
+  ESTOURADO = 'ESTOURADO',
+  CONCLUIDA_NO_PRAZO = 'CONCLUIDA_NO_PRAZO',
+  CONCLUIDA_COM_PRAZO_ESTOURADO = 'CONCLUIDA_COM_PRAZO_ESTOURADO',
+}
+
 export enum Prioridade {
   BAIXA = 'BAIXA',
   MEDIA = 'MÉDIA',
@@ -31,6 +38,7 @@ export interface OrdemServico {
   tipo_manutencao: TipoManutencao;
   prioridade: Prioridade;
   status: StatusOs;
+  status_prazo: StatusPrazoOs;
   descricao_falha: string;
   abertura_em: string;
   inicio_em: string | null;
@@ -40,6 +48,7 @@ export interface OrdemServico {
   horas_trabalhadas: number | null;
   duracao_execucao_minutos?: number | null;
   duracao_execucao_formatada?: string | null;
+  prazo_limite_em?: string | null;
   total_trabalhado_minutos?: number;
   total_trabalhado_formatado?: string;
   apontamento_aberto?: boolean;
@@ -88,4 +97,5 @@ export interface DashboardIndicadores {
   tempo_medio_ate_inicio_horas: number;
   tempo_medio_ate_conclusao_horas: number;
   tempo_medio_trabalho_horas: number;
+  prazo_horas: Record<Prioridade, number>;
 }

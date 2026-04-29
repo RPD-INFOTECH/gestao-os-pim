@@ -15,11 +15,18 @@
 
   <form (ngSubmit)="onSubmit()" #f="ngForm" class="space-y-6 rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-8">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @if (isEdit()) {
       <div>
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Código *</label>
         <input data-cy="eq-codigo" name="codigo" [(ngModel)]="model.codigo" required minlength="2"
           class="w-full bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
       </div>
+      } @else {
+      <div class="rounded-lg border border-blue-900/40 bg-blue-950/20 p-3">
+        <p class="text-[10px] uppercase tracking-widest text-blue-300 font-bold mb-1">Código automático</p>
+        <p class="text-sm text-slate-300">O sistema vai gerar o código do equipamento ao salvar.</p>
+      </div>
+      }
       <div>
         <label class="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Nome *</label>
         <input data-cy="eq-nome" name="nome" [(ngModel)]="model.nome" required minlength="2"

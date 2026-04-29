@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { OrdemServicoService } from '@features/ordens-servico/services/ordem-servico.service';
-import { OrdemServico, Prioridade, StatusOs } from '@shared/models/ordem-servico.model';
+import { OrdemServico, Prioridade, StatusOs, StatusPrazoOs } from '@shared/models/ordem-servico.model';
 import { StatusLabelPipe } from '@shared/ui/status-label.pipe';
+import { TempoTrabalhadoPipe } from '@shared/ui/tempo-trabalhado.pipe';
 
 type SerieItem = {
   label: string;
@@ -29,11 +30,12 @@ type SetorResumo = {
   concluidas: number;
 };
 
-type SlaFiltro = '' | 'NO_PRAZO' | 'ESTOURADO';
+type PrazoFiltro = '' | 'NO_PRAZO' | 'ESTOURADO';
+type PeriodoPreset = 'MES_ATUAL' | '60_DIAS' | '90_DIAS' | 'PERSONALIZADO' | 'TODOS';
 
 @Component({
   selector: 'app-relatorios',
-  imports: [CommonModule, FormsModule, RouterLink, StatusLabelPipe],
+  imports: [CommonModule, FormsModule, RouterLink, StatusLabelPipe, TempoTrabalhadoPipe],
   templateUrl: './relatorios.html',
 })
 export class Relatorios implements OnInit {
@@ -43,9 +45,13 @@ export class Relatorios implements OnInit {
   loading = signal(false);
   error = signal<string | null>(null);
   statusFiltro = signal<StatusOs | ''>('');
-  slaFiltro = signal<SlaFiltro>('');
+  prazoFiltro = signal<PrazoFiltro>('');
   tecnicoFiltro = signal('');
   setorFiltro = signal('');
+  dataInicio = signal('');
+  dataFim = signal('');
+  periodoPreset = signal<PeriodoPreset>('MES_ATUAL');
+  filtrosAvancadosAbertos = signal(false);
 
   statusOptions = [
     StatusOs.ABERTA,
@@ -89,13 +95,13 @@ export class Relatorios implements OnInit {
 
   ordensFiltradas = computed(() => {
     const status = this.statusFiltro();
-    const sla = this.slaFiltro();
+    const prazo = this.prazoFiltro();
     const tecnicoId = this.tecnicoFiltro();
     const setor = this.setorFiltro();
 
     return this.ordens().filter((o) => {
       const matchStatus = !status || o.status === status;
-      const matchSla = !sla || this.slaLabel(o) === sla;
+      const matchPrazo = !prazo || this.prazoLabel(o) === prazo;
       const matchSetor = !setor || (o.equipamento?.setor?.trim() || '') === setor;
       const tecnicoAtualId = o.tecnico?.id ? String(o.tecnico.id) : '';
       const matchTecnico =
@@ -103,7 +109,7 @@ export class Relatorios implements OnInit {
         tecnicoAtualId === tecnicoId ||
         (o.apontamentos ?? []).some((apontamento) => String(apontamento.tecnico?.id ?? apontamento.tecnicoId) === tecnicoId);
 
-      return matchStatus && matchSla && matchSetor && matchTecnico;
+      return matchStatus && matchPrazo && matchSetor && matchTecnico;
     });
   });
 
@@ -122,6 +128,16 @@ export class Relatorios implements OnInit {
   totalHoras = computed(() =>
     this.ordensFiltradas().reduce((acc, o) => acc + (Number(o.horas_trabalhadas) || 0), 0)
   );
+
+  periodoLabel = computed(() => {
+    const inicio = this.dataInicio();
+    const fim = this.dataFim();
+
+    if (inicio && fim) return `${this.formatDateLabel(inicio)} a ${this.formatDateLabel(fim)}`;
+    if (inicio) return `A partir de ${this.formatDateLabel(inicio)}`;
+    if (fim) return `Até ${this.formatDateLabel(fim)}`;
+    return 'Todo o histórico carregado';
+  });
 
   tempoMedioConclusaoHoras = computed(() => {
     const concluidas = this.ordensFiltradas().filter((o) => !!o.conclusao_em);
@@ -294,8 +310,12 @@ export class Relatorios implements OnInit {
   );
 
   ngOnInit(): void {
+    this.definirMesAtual();
+  }
+
+  load(): void {
     this.loading.set(true);
-    this.service.list().subscribe({
+    this.carregarOrdens().subscribe({
       next: (data) => {
         this.ordens.set(data);
         this.loading.set(false);
@@ -305,6 +325,82 @@ export class Relatorios implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  definirMesAtual(): void {
+    const hoje = new Date();
+    const inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+
+    this.periodoPreset.set('MES_ATUAL');
+    this.dataInicio.set(this.toDateInput(inicio));
+    this.dataFim.set(this.toDateInput(hoje));
+    this.load();
+  }
+
+  definirUltimosDias(dias: 60 | 90): void {
+    const hoje = new Date();
+    const inicio = new Date(hoje);
+    inicio.setDate(hoje.getDate() - dias);
+
+    this.periodoPreset.set(dias === 60 ? '60_DIAS' : '90_DIAS');
+    this.dataInicio.set(this.toDateInput(inicio));
+    this.dataFim.set(this.toDateInput(hoje));
+    this.load();
+  }
+
+  resetFiltros(): void {
+    this.statusFiltro.set('');
+    this.prazoFiltro.set('');
+    this.tecnicoFiltro.set('');
+    this.setorFiltro.set('');
+    this.definirMesAtual();
+  }
+
+  limparPeriodo(): void {
+    this.periodoPreset.set('TODOS');
+    this.dataInicio.set('');
+    this.dataFim.set('');
+    this.load();
+  }
+
+  onPeriodoManualChange(field: 'inicio' | 'fim', value: string): void {
+    this.periodoPreset.set('PERSONALIZADO');
+
+    if (field === 'inicio') {
+      this.dataInicio.set(value);
+    } else {
+      this.dataFim.set(value);
+    }
+
+    this.load();
+  }
+
+  periodoButtonClass(preset: PeriodoPreset): string {
+    if (this.periodoPreset() === preset) {
+      return 'border-blue-500 bg-blue-600 text-white shadow-sm shadow-blue-950/40 ring-1 ring-blue-400/40';
+    }
+
+    return 'border-slate-700 bg-slate-950/40 text-slate-300 hover:border-blue-500 hover:bg-blue-950/30 hover:text-slate-100';
+  }
+
+  private carregarOrdens() {
+    return this.service.list({
+      dataInicio: this.dataInicio(),
+      dataFim: this.dataFim(),
+    });
+  }
+
+  private toDateInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  private formatDateLabel(value: string): string {
+    const [year, month, day] = value.split('-');
+    return `${day}/${month}/${year}`;
   }
 
   percent(value: number, total: number): number {
@@ -346,9 +442,20 @@ export class Relatorios implements OnInit {
     }
   }
 
-  slaLabel(ordem: OrdemServico): 'NO_PRAZO' | 'ESTOURADO' {
-    const limiteHoras = this.slaLimiteHoras(ordem.prioridade);
-    const base = new Date(ordem.inicio_em ?? ordem.abertura_em).getTime();
+  prazoLabel(ordem: OrdemServico): 'NO_PRAZO' | 'ESTOURADO' {
+    if (
+      ordem.status_prazo === StatusPrazoOs.CONCLUIDA_COM_PRAZO_ESTOURADO ||
+      ordem.status_prazo === StatusPrazoOs.ESTOURADO
+    ) {
+      return 'ESTOURADO';
+    }
+
+    if (ordem.status_prazo === StatusPrazoOs.CONCLUIDA_NO_PRAZO) {
+      return 'NO_PRAZO';
+    }
+
+    const limiteHoras = this.prazoLimiteHoras(ordem.prioridade);
+    const base = new Date(ordem.abertura_em).getTime();
     const fim = new Date(ordem.conclusao_em ?? new Date()).getTime();
     const horas = (fim - base) / (1000 * 60 * 60);
 
@@ -363,7 +470,7 @@ export class Relatorios implements OnInit {
     return 'NO_PRAZO';
   }
 
-  private slaLimiteHoras(prioridade: Prioridade): number {
+  private prazoLimiteHoras(prioridade: Prioridade): number {
     switch (prioridade) {
       case Prioridade.CRITICA:
         return 4;

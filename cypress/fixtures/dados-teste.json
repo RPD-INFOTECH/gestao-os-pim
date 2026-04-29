@@ -21,5 +21,13 @@
     "senha": "seed123",
     "perfil": "SOLICITANTE",
     "setor": "Produção"
+  },
+  "usuario_gestor": {
+    "nome": "Gestor Demo",
+    "email": "gestor@seed.local",
+    "matricula": "SEED-GES-001",
+    "senha": "seed123",
+    "perfil": "GESTOR",
+    "setor": "Gestão"
   }
 }

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { OrdemServicoService } from '@features/ordens-servico/services/ordem-servico.service';
 import { UsuarioService } from '@features/usuarios/services/usuario.service';
-import { OrdemServico, Prioridade, StatusOs } from '@shared/models/ordem-servico.model';
+import { OrdemServico, Prioridade, StatusOs, StatusPrazoOs } from '@shared/models/ordem-servico.model';
 import { AuthService } from '@core/auth/auth.service';
 import { Perfil } from '@core/models/perfil.enum';
 import { Usuario } from '@shared/models/usuario.model';
@@ -42,6 +42,10 @@ export class OsList implements OnInit {
     const p = this.perfil();
     return p === Perfil.SOLICITANTE || p === Perfil.SUPERVISOR;
   });
+  canFilterTecnico = computed(() => {
+    const p = this.perfil();
+    return p === Perfil.SUPERVISOR || p === Perfil.GESTOR;
+  });
 
   filtered = computed<OrdemServico[]>(() => {
     const filtroApontamento = this.filtroApontamento();
@@ -68,7 +72,7 @@ export class OsList implements OnInit {
   });
 
   ngOnInit(): void {
-    if (this.perfil() === Perfil.SUPERVISOR) {
+    if (this.canFilterTecnico()) {
       this.usuarioService.list().subscribe({
         next: (users) => this.tecnicos.set(users.filter((user) => user.perfil === Perfil.TECNICO && user.ativo)),
         error: () => {},
@@ -145,9 +149,20 @@ export class OsList implements OnInit {
     }
   }
 
-  slaBadge(o: OrdemServico): string {
-    const limiteHoras = this.slaLimiteHoras(o.prioridade);
-    const base = new Date(o.inicio_em ?? o.abertura_em).getTime();
+  prazoBadge(o: OrdemServico): string {
+    if (
+      o.status_prazo === StatusPrazoOs.CONCLUIDA_COM_PRAZO_ESTOURADO ||
+      o.status_prazo === StatusPrazoOs.ESTOURADO
+    ) {
+      return 'bg-red-900/40 text-red-400';
+    }
+
+    if (o.status_prazo === StatusPrazoOs.CONCLUIDA_NO_PRAZO) {
+      return 'bg-green-900/40 text-green-400';
+    }
+
+    const limiteHoras = this.prazoLimiteHoras(o.prioridade);
+    const base = new Date(o.abertura_em).getTime();
     const fim = new Date(o.conclusao_em ?? new Date()).getTime();
     const horas = (fim - base) / (1000 * 60 * 60);
 
@@ -162,9 +177,21 @@ export class OsList implements OnInit {
     return 'bg-blue-900/40 text-blue-400';
   }
 
-  slaLabel(o: OrdemServico): string {
-    const limiteHoras = this.slaLimiteHoras(o.prioridade);
-    const base = new Date(o.inicio_em ?? o.abertura_em).getTime();
+  prazoLabel(o: OrdemServico): string {
+    if (o.status_prazo === StatusPrazoOs.CONCLUIDA_COM_PRAZO_ESTOURADO) {
+      return 'CONCLUÍDA FORA DO PRAZO';
+    }
+
+    if (o.status_prazo === StatusPrazoOs.CONCLUIDA_NO_PRAZO) {
+      return 'CONCLUÍDA NO PRAZO';
+    }
+
+    if (o.status_prazo === StatusPrazoOs.ESTOURADO) {
+      return 'ESTOURADO';
+    }
+
+    const limiteHoras = this.prazoLimiteHoras(o.prioridade);
+    const base = new Date(o.abertura_em).getTime();
     const fim = new Date(o.conclusao_em ?? new Date()).getTime();
     const horas = (fim - base) / (1000 * 60 * 60);
 
@@ -197,7 +224,7 @@ export class OsList implements OnInit {
     return 'bg-slate-800 text-slate-400';
   }
 
-  private slaLimiteHoras(prioridade: Prioridade): number {
+  private prazoLimiteHoras(prioridade: Prioridade): number {
     switch (prioridade) {
       case Prioridade.CRITICA:
         return 4;

@@ -7,6 +7,6 @@ export const RELATORIOS_ROUTES: Routes = [
   {
     path: '',
     component: Relatorios,
-    canActivate: [roleGuard(Perfil.SUPERVISOR)],
+    canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.GESTOR)],
   },
 ];

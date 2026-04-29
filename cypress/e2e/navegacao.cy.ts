@@ -2,6 +2,7 @@ import dadosTeste from '../fixtures/dados-teste.json';
 
 const tecnico = dadosTeste.usuario_tecnico;
 const solicitante = dadosTeste.usuario_solicitante;
+const gestor = dadosTeste.usuario_gestor;
 
 describe('Navegação e guardas', () => {
   it('exibe o menu administrativo completo para supervisor', () => {
@@ -37,6 +38,27 @@ describe('Navegação e guardas', () => {
     cy.url({ timeout: 15000 }).should('include', '/403');
     cy.contains('Acesso Negado').should('be.visible');
   });
+
+  it('exibe menu de gestão para gestor', () => {
+    cy.login(gestor.email, gestor.senha);
+    cy.visit('/dashboard');
+
+    cy.contains('Dashboard').should('be.visible');
+    cy.contains('Ordens de Serviço').should('be.visible');
+    cy.contains('Equipamentos').should('be.visible');
+    cy.contains('Usuários').should('be.visible');
+    cy.contains('Histórico').should('be.visible');
+    cy.contains('Relatórios').should('be.visible');
+    cy.contains('Prazo de Atendimento').should('be.visible');
+  });
+
+  it('bloqueia supervisor na configuração de prazo de atendimento exclusiva do gestor', () => {
+    cy.loginAsSupervisor();
+    cy.visit('/configuracoes/prazo-atendimento');
+    cy.url({ timeout: 15000 }).should('include', '/403');
+    cy.contains('Acesso Negado').should('be.visible');
+  });
+
 
   it('redireciona rotas inexistentes para a tela 404', () => {
     cy.loginAsSupervisor();

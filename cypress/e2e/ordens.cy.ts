@@ -2,13 +2,12 @@ import dadosTeste from '../fixtures/dados-teste.json';
 
 const tecnico = dadosTeste.usuario_tecnico;
 const solicitante = dadosTeste.usuario_solicitante;
-const equipamento = dadosTeste.equipamento;
 
 function criarOsAbertaPeloSolicitante(descricaoFalha: string) {
   cy.login(solicitante.email, solicitante.senha);
   cy.visit('/ordens-de-servico/nova');
   cy.get('[data-cy="os-equipamento"] option')
-    .contains(equipamento.codigo)
+    .eq(1)
     .then(($opt) => {
       cy.get('[data-cy="os-equipamento"]').select($opt.text());
     });

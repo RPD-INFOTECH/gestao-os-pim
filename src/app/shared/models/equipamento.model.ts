@@ -33,7 +33,7 @@ export interface EquipamentoListFilters {
 }
 
 export interface CreateEquipamentoDto {
-  codigo: string;
+  codigo?: string;
   nome: string;
   tipo: string;
   localizacao: string;

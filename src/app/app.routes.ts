@@ -46,6 +46,11 @@ export const routes: Routes = [
           import('@features/relatorios/feature.routes').then((m) => m.RELATORIOS_ROUTES),
       },
       {
+        path: 'configuracoes',
+        loadChildren: () =>
+          import('@features/configuracoes/feature.routes').then((m) => m.CONFIGURACOES_ROUTES),
+      },
+      {
         path: '',
         loadChildren: () => import('@features/errors/feature.routes').then((m) => m.ERROR_ROUTES),
       },

@@ -23,6 +23,8 @@ export class OrdemServicoService {
     busca?: string;
     tecnicoId?: string;
     setor?: string;
+    dataInicio?: string;
+    dataFim?: string;
   }): Observable<OrdemServico[]> {
     const sanitized = Object.fromEntries(
       Object.entries(params ?? {}).filter(([, value]) => value !== undefined && value !== null && value !== '')

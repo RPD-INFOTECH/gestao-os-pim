@@ -43,7 +43,8 @@
           </div>
           <div class="rounded-xl border border-slate-800 bg-slate-950/30 p-4">
             <p class="text-[10px] uppercase tracking-widest text-slate-500">Horas trabalhadas</p>
-            <p class="mt-2 text-base font-semibold text-blue-300">{{ u.total_horas_trabalhadas | number:'1.0-2' }}h</p>
+            <p class="mt-2 text-base font-semibold text-blue-300">{{ u.total_horas_trabalhadas | tempoTrabalhado }}</p>
+            <p class="mt-1 text-xs text-slate-500">{{ u.total_horas_trabalhadas | number:'1.2-2' }} h decimais</p>
           </div>
         </div>
       </section>

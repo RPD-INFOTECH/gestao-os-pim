@@ -1,6 +1,7 @@
 import dadosTeste from '../fixtures/dados-teste.json';
 
 const tecnico = dadosTeste.usuario_tecnico;
+const gestor = dadosTeste.usuario_gestor;
 
 describe('Usuários', () => {
   beforeEach(() => {
@@ -20,10 +21,28 @@ describe('Usuários', () => {
 
     cy.get('[data-cy="user-nome"]').type('Usuário Obrigatório');
     cy.get('[data-cy="user-email"]').type('obrigatorio@cypress.local');
-    cy.get('[data-cy="user-matricula"]').type(`OBR-${Date.now()}`);
     cy.get('[data-cy="user-senha"]').type('Cypress@123');
 
     cy.get('button[type="submit"]').should('not.be.disabled');
+  });
+
+  it('restringe perfis disponíveis para supervisor', () => {
+    cy.visit('/usuarios/novo');
+
+    cy.get('[data-cy="user-perfil"] option').then((options) => {
+      const values = options.toArray().map((option) => option.getAttribute('value'));
+      expect(values).to.deep.eq(['TÉCNICO', 'SOLICITANTE']);
+    });
+  });
+
+  it('permite gestor selecionar perfis funcionais exceto gestor', () => {
+    cy.login(gestor.email, gestor.senha);
+    cy.visit('/usuarios/novo');
+
+    cy.get('[data-cy="user-perfil"] option').then((options) => {
+      const values = options.toArray().map((option) => option.getAttribute('value'));
+      expect(values).to.deep.eq(['SUPERVISOR', 'TÉCNICO', 'SOLICITANTE']);
+    });
   });
 
   it('cria um técnico', () => {
@@ -33,7 +52,6 @@ describe('Usuários', () => {
     cy.visit('/usuarios/novo');
     cy.get('[data-cy="user-nome"]').type(nome);
     cy.get('[data-cy="user-email"]').type(`tecnico.${timestamp}@cypress.local`);
-    cy.get('[data-cy="user-matricula"]').type(`T-${timestamp}`);
     cy.get('[data-cy="user-senha"]').type('Cypress@123');
     cy.get('[data-cy="user-perfil"]').select('TÉCNICO');
     cy.get('[data-cy="user-setor"]').type('Manutenção');
@@ -41,6 +59,7 @@ describe('Usuários', () => {
 
     cy.url().should('include', '/usuarios');
     cy.contains(nome, { timeout: 15000 }).should('be.visible');
+    cy.contains('tr', nome).contains(/USR-\d{6}/).should('be.visible');
   });
 
   it('cria um solicitante', () => {
@@ -50,7 +69,6 @@ describe('Usuários', () => {
     cy.visit('/usuarios/novo');
     cy.get('[data-cy="user-nome"]').type(nome);
     cy.get('[data-cy="user-email"]').type(`solic.${timestamp}@cypress.local`);
-    cy.get('[data-cy="user-matricula"]').type(`S-${timestamp}`);
     cy.get('[data-cy="user-senha"]').type('Cypress@123');
     cy.get('[data-cy="user-perfil"]').select('SOLICITANTE');
     cy.get('[data-cy="user-setor"]').type('Operação');
@@ -58,6 +76,7 @@ describe('Usuários', () => {
 
     cy.url().should('include', '/usuarios');
     cy.contains(nome, { timeout: 15000 }).should('be.visible');
+    cy.contains('tr', nome).contains(/USR-\d{6}/).should('be.visible');
   });
 
   it('exibe os detalhes de um usuário existente', () => {

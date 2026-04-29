@@ -26,7 +26,10 @@ VALUES
    'TÉCNICO', 'Manutenção', true, NOW()),
   (gen_random_uuid(), 'Solicitante Demo Linha 1', 'solicitante.linha1@seed.local', 'SEED-SOL-001',
    (SELECT senha_hash FROM seed_password),
-   'SOLICITANTE', 'Produção', true, NOW())
+   'SOLICITANTE', 'Produção', true, NOW()),
+  (gen_random_uuid(), 'Gestor Demo', 'gestor@seed.local', 'SEED-GES-001',
+   (SELECT senha_hash FROM seed_password),
+   'GESTOR', 'Gestão', true, NOW())
 ON CONFLICT (email) DO UPDATE SET
   nome = EXCLUDED.nome,
   matricula = EXCLUDED.matricula,
@@ -34,6 +37,17 @@ ON CONFLICT (email) DO UPDATE SET
   perfil = EXCLUDED.perfil,
   setor = EXCLUDED.setor,
   ativo = EXCLUDED.ativo;
+
+INSERT INTO configuracao_prazo_atendimento (id, prioridade, horas_limite, ativo, atualizado_em)
+VALUES
+  (gen_random_uuid(), 'BAIXA', 72, true, NOW()),
+  (gen_random_uuid(), 'MÉDIA', 24, true, NOW()),
+  (gen_random_uuid(), 'ALTA', 8, true, NOW()),
+  (gen_random_uuid(), 'CRÍTICA', 4, true, NOW())
+ON CONFLICT (prioridade) DO UPDATE SET
+  horas_limite = EXCLUDED.horas_limite,
+  ativo = EXCLUDED.ativo,
+  atualizado_em = NOW();
 
 INSERT INTO equipamento (codigo, nome, tipo, localizacao, setor, ativo, data_cadastro)
 VALUES ('SEED-EQP-001', 'Prensa Hidraulica 01', 'Prensa', 'Linha A', 'Producao', true, NOW())

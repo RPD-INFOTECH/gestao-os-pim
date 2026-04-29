@@ -2,20 +2,21 @@
 <div class="fixed inset-0 z-0">
   <img
     alt="Industrial complex"
-    class="w-full h-full object-cover opacity-30 grayscale"
+    class="h-full w-full object-cover opacity-25 grayscale"
     data-alt="Wide shot of a high-tech industrial facility at night with glowing blue accent lights and complex steel piping structures in shadows"
     src="login-industrial.svg"
   />
-  <div class="absolute inset-0 bg-gradient-to-tr from-surface via-surface/90 to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-tr from-surface via-surface/95 to-surface/35"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(37,99,235,0.20),transparent_32%),radial-gradient(circle_at_78%_76%,rgba(14,165,233,0.12),transparent_30%)]"></div>
 </div>
 
 <!-- Container principal do login -->
-<div class="relative z-10 w-full max-w-5xl px-6 flex flex-col md:flex-row items-stretch gap-0 md:gap-12">
+<div class="relative z-10 flex w-full max-w-6xl flex-col items-stretch gap-10 px-6 md:flex-row md:gap-14">
 
   <!-- Coluna esquerda: branding e mensagem -->
-  <div class="flex-1 flex flex-col justify-center py-12">
+  <div class="flex flex-1 flex-col justify-center py-10">
     <div class="mb-8 flex items-center gap-3">
-      <div class="w-10 h-10 bg-primary flex items-center justify-center rounded-lg">
+      <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
         <span
           class="material-symbols-outlined text-on-primary font-bold"
           data-icon="precision_manufacturing"
@@ -28,26 +29,46 @@
       </h1>
     </div>
 
-    <h2 class="font-headline text-5xl md:text-6xl font-extrabold text-primary leading-tight tracking-tighter mb-6">
-      Gestão Inteligente<br />
-      <span class="text-on-surface">de OS.</span>
+    <p class="mb-4 w-fit rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-primary">
+      Plataforma de manutenção industrial
+    </p>
+
+    <h2 class="mb-6 font-headline text-4xl font-extrabold leading-tight tracking-tighter text-on-surface sm:text-5xl md:text-6xl">
+      Controle operacional<br />
+      <span class="text-primary">de ordens de serviço.</span>
     </h2>
 
-    <p class="text-on-surface-variant text-lg max-w-md leading-relaxed">
-      Plataforma centralizada para controle de ordens de serviço, manutenção e acompanhamento de ativos do Polo Industrial.
+    <p class="max-w-xl text-lg leading-relaxed text-on-surface-variant">
+      Gerencie solicitações, equipamentos, equipes técnicas e indicadores de manutenção em uma operação centralizada e rastreável.
     </p>
+
+    <div class="mt-8 grid max-w-xl grid-cols-1 gap-3 text-sm text-on-surface-variant sm:grid-cols-3">
+      <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <p class="font-bold text-on-surface">Rastreabilidade</p>
+        <p class="mt-1 text-xs leading-relaxed">Histórico completo das alterações.</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <p class="font-bold text-on-surface">Atendimento</p>
+        <p class="mt-1 text-xs leading-relaxed">Prazos, status e responsáveis.</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <p class="font-bold text-on-surface">Indicadores</p>
+        <p class="mt-1 text-xs leading-relaxed">Relatórios para decisão.</p>
+      </div>
+    </div>
   </div>
 
   <!-- Coluna direita: card de login -->
-  <div class="w-full md:w-[420px]">
-    <div class="glass-panel p-8 md:p-10 rounded-xl shadow-2xl border-none">
+  <div class="w-full md:w-[430px]">
+    <div class="glass-panel rounded-2xl border border-white/10 p-8 shadow-2xl shadow-slate-950/30 md:p-10">
 
       <div class="mb-10">
-        <h3 class="font-headline text-2xl font-bold text-on-surface mb-2">
-          Acesso ao Sistema
+        <p class="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">Acesso seguro</p>
+        <h3 class="mb-2 font-headline text-2xl font-bold text-on-surface">
+          Entrar no sistema
         </h3>
         <p class="text-sm text-on-surface-variant">
-          Insira suas credenciais para gerenciar demandas, equipes de manutenção e relatórios.
+          Use suas credenciais corporativas para acessar a gestão de manutenção.
         </p>
       </div>
 
@@ -77,10 +98,10 @@
 
             <input
               [(ngModel)]="email"
-              class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-0 focus:outline-none transition-all border-b-2 border-transparent focus:border-primary"
+              class="w-full rounded-xl border border-white/10 bg-surface-container-highest py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               id="email"
               name="email"
-              placeholder="nome@pim.com"
+              placeholder="nome@empresa.com"
               required
               type="email"
             />
@@ -108,7 +129,7 @@
 
             <input
               [(ngModel)]="password"
-              class="w-full bg-surface-container-highest border-none rounded-lg py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-0 focus:outline-none transition-all border-b-2 border-transparent focus:border-primary"
+              class="w-full rounded-xl border border-white/10 bg-surface-container-highest py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/50 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               id="password"
               name="password"
               placeholder="••••••••"
@@ -116,11 +137,9 @@
               type="password"
             />
 
-            <!-- Indicador visual de validação em tempo real -->
-            <div class="absolute bottom-0 left-0 h-0.5 bg-primary w-2/3"></div>
           </div>
 
-          <p class="text-[10px] text-primary/70 flex items-center gap-1">
+          <p class="flex items-center gap-1 text-[10px] text-primary/70">
             <span class="material-symbols-outlined text-[12px]" data-icon="check_circle">
               check_circle
             </span>
@@ -132,7 +151,7 @@
         <div class="pt-4">
           <button
             [disabled]="loading"
-            class="soul-gradient w-full py-4 rounded-lg text-on-primary font-bold text-sm flex items-center justify-center gap-3 active:scale-[0.98] transition-transform shadow-lg shadow-primary/20 disabled:opacity-70"
+            class="soul-gradient flex w-full items-center justify-center gap-3 rounded-xl py-4 text-sm font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform active:scale-[0.98] disabled:opacity-70"
             type="submit"
           >
             <svg
@@ -165,8 +184,8 @@
     </div>
 
     <!-- Rodapé -->
-    <p class="mt-8 text-center text-xs text-outline/50 font-label tracking-tight">
-      PROPRIETARY SYSTEM • MANAUS TERMINAL ALPHA • v4.2.0-STABLE
+    <p class="mt-8 text-center font-label text-xs tracking-tight text-outline/50">
+      Sistema interno de gestão • Manaus Indústria • v1
     </p>
   </div>
 </div>
