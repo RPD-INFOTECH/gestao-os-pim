@@ -183,7 +183,7 @@ jobs:
             exit 1
           fi
 
-          curl -fsS -X POST "http://45.84.243.199:9000/api/stacks/125/git/redeploy" \
+          curl -fsS -X PUT "http://45.84.243.199:9000/api/stacks/125/git/redeploy" \
             -H "X-API-Key: ${PORTAINER_TOKEN}" \
             -H "Content-Type: application/json" \
             -d '{"pullImage": true, "repositoryAuthentication": false}'
