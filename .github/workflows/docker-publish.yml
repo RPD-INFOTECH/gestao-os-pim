@@ -132,6 +132,9 @@ jobs:
     env:
       PORTAINER_TOKEN: ${{ secrets.PORTAINER_TOKEN }}
       PORTAINER_WEBHOOK_URL: ${{ secrets.PORTAINER_WEBHOOK_URL }}
+      PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
+      PORTAINER_STACK_ID: ${{ secrets.PORTAINER_STACK_ID }}
+      PORTAINER_ENDPOINT_ID: ${{ secrets.PORTAINER_ENDPOINT_ID }}
 
     steps:
       - name: Checkout
@@ -183,7 +186,12 @@ jobs:
             exit 1
           fi
 
-          curl -fsS -X PUT "http://45.84.243.199:9000/api/stacks/125/git/redeploy" \
+          PORTAINER_BASE_URL="${PORTAINER_URL:-http://45.84.243.199:9000}"
+          STACK_ID="${PORTAINER_STACK_ID:-125}"
+          ENDPOINT_ID="${PORTAINER_ENDPOINT_ID:-1}"
+
+          echo "Tentando redeploy via API do Portainer no stack ${STACK_ID}, endpoint ${ENDPOINT_ID}..."
+          curl -fsS -X PUT "${PORTAINER_BASE_URL}/api/stacks/${STACK_ID}/git/redeploy?endpointId=${ENDPOINT_ID}" \
             -H "X-API-Key: ${PORTAINER_TOKEN}" \
             -H "Content-Type: application/json" \
             -d '{"pullImage": true, "repositoryAuthentication": false}'
