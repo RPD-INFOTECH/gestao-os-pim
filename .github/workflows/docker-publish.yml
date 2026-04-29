@@ -167,13 +167,22 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Redeploy stack no Portainer via webhook
-        if: env.PORTAINER_WEBHOOK_URL != ''
-        run: curl -fsS -X POST "${PORTAINER_WEBHOOK_URL}"
-
-      - name: Redeploy stack no Portainer com pull da imagem
-        if: env.PORTAINER_WEBHOOK_URL == '' && env.PORTAINER_TOKEN != ''
+      - name: Redeploy stack no Portainer
+        if: env.PORTAINER_WEBHOOK_URL != '' || env.PORTAINER_TOKEN != ''
         run: |
+          if [ -n "${PORTAINER_WEBHOOK_URL}" ]; then
+            echo "Tentando redeploy via webhook do Portainer..."
+            if curl -fsS -X POST "${PORTAINER_WEBHOOK_URL}"; then
+              exit 0
+            fi
+            echo "Webhook falhou; tentando fallback via API token."
+          fi
+
+          if [ -z "${PORTAINER_TOKEN}" ]; then
+            echo "PORTAINER_TOKEN não configurado; não foi possível executar fallback."
+            exit 1
+          fi
+
           curl -fsS -X POST "http://45.84.243.199:9000/api/stacks/125/git/redeploy" \
             -H "X-API-Key: ${PORTAINER_TOKEN}" \
             -H "Content-Type: application/json" \
