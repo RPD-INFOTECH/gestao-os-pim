@@ -4,10 +4,12 @@
       <h1 class="text-2xl font-bold font-headline text-slate-100 sm:text-3xl">Usuários</h1>
       <p class="text-sm text-slate-400 mt-1">Gerenciamento de contas e perfis de acesso</p>
     </div>
-    <a [routerLink]="['/usuarios/novo']" class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-500">
-      <span class="material-symbols-outlined">person_add</span>
-      Novo Usuário
-    </a>
+    @if (canWrite()) {
+      <a [routerLink]="['/usuarios/novo']" class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-500">
+        <span class="material-symbols-outlined">person_add</span>
+        Novo Usuário
+      </a>
+    }
   </header>
 
   @if (loading()) {
@@ -82,7 +84,14 @@
         <tbody class="text-sm text-slate-200">
           @for (u of filtrados(); track u.id) {
             <tr class="border-t border-slate-800 hover:bg-slate-800/30">
-              <td class="px-6 py-4"><a [routerLink]="['/usuarios', u.id]" class="font-semibold text-slate-100 hover:text-blue-400">{{ u.nome }}</a></td>
+              <td class="px-6 py-4">
+                <a
+                  [routerLink]="canEdit(u) ? ['/usuarios', u.id] : ['/usuarios', u.id, 'detalhes']"
+                  class="font-semibold text-slate-100 hover:text-blue-400"
+                >
+                  {{ u.nome }}
+                </a>
+              </td>
               <td class="px-6 py-4 text-slate-400">{{ u.email }}</td>
               <td class="px-6 py-4 font-mono text-blue-400">{{ u.matricula }}</td>
               <td class="px-6 py-4">
@@ -100,12 +109,16 @@
                 <a [routerLink]="['/usuarios', u.id, 'detalhes']" class="text-slate-400 hover:text-blue-400 inline-block p-1">
                   <span class="material-symbols-outlined text-base">visibility</span>
                 </a>
-                <a [routerLink]="['/usuarios', u.id]" class="text-slate-400 hover:text-blue-400 inline-block p-1 ml-2">
-                  <span class="material-symbols-outlined text-base">edit</span>
-                </a>
-                <button (click)="onDelete(u)" class="text-slate-400 hover:text-red-400 inline-block p-1 ml-2">
-                  <span class="material-symbols-outlined text-base">delete</span>
-                </button>
+                @if (canEdit(u)) {
+                  <a [routerLink]="['/usuarios', u.id]" class="text-slate-400 hover:text-blue-400 inline-block p-1 ml-2">
+                    <span class="material-symbols-outlined text-base">edit</span>
+                  </a>
+                }
+                @if (canDelete()) {
+                  <button (click)="onDelete(u)" class="text-slate-400 hover:text-red-400 inline-block p-1 ml-2">
+                    <span class="material-symbols-outlined text-base">delete</span>
+                  </button>
+                }
               </td>
             </tr>
           } @empty {

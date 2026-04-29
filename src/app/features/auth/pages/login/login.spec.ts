@@ -9,6 +9,8 @@ describe('Login', () => {
   let fixture: ComponentFixture<Login>;
 
   beforeEach(async () => {
+    TestBed.resetTestingModule();
+
     await TestBed.configureTestingModule({
       imports: [Login],
       providers: [

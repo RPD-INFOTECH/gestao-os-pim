@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { DashboardService } from './dashboard.service';
+import { Prioridade } from '@shared/models/ordem-servico.model';
 
 describe('DashboardService', () => {
   let service: DashboardService;
@@ -38,6 +39,7 @@ describe('DashboardService', () => {
       expect(response.tempo_medio_ate_inicio_horas).toBe(1.5);
       expect(response.tempo_medio_ate_conclusao_horas).toBe(8.2);
       expect(response.tempo_medio_trabalho_horas).toBe(3.4);
+      expect(response.prazo_horas[Prioridade.ALTA]).toBe(8);
     });
 
     const req = httpMock.expectOne('/api/dashboard');
@@ -56,6 +58,12 @@ describe('DashboardService', () => {
       tempo_medio_ate_inicio_horas: 1.5,
       tempo_medio_ate_conclusao_horas: 8.2,
       tempo_medio_trabalho_horas: 3.4,
+      prazo_horas: {
+        [Prioridade.BAIXA]: 72,
+        [Prioridade.MEDIA]: 24,
+        [Prioridade.ALTA]: 8,
+        [Prioridade.CRITICA]: 4,
+      },
     });
   });
 });

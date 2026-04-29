@@ -37,7 +37,7 @@
         <option [value]="p">{{ prioridadeLabel(p) }}</option>
       }
     </select>
-    @if (perfil() === 'SUPERVISOR') {
+    @if (canFilterTecnico()) {
       <select [ngModel]="filtroTecnicoId()" (ngModelChange)="filtroTecnicoId.set($event); onFilterChange()"
         class="bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-blue-500">
         <option value="">Todos técnicos</option>
@@ -95,7 +95,7 @@
             <th class="px-6 py-4">Prioridade</th>
             <th class="px-6 py-4">Status</th>
             <th class="px-6 py-4">Apontamento</th>
-            <th class="px-6 py-4">SLA</th>
+            <th class="px-6 py-4">Prazo</th>
             <th class="px-6 py-4">Abertura</th>
             <th class="px-6 py-4"></th>
           </tr>
@@ -128,8 +128,8 @@
                 </span>
               </td>
               <td class="px-6 py-4">
-                <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="slaBadge(o)">
-                  {{ slaLabel(o) }}
+                <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="prazoBadge(o)">
+                  {{ prazoLabel(o) }}
                 </span>
               </td>
               <td class="px-6 py-4 text-slate-500 text-xs font-mono">{{ o.abertura_em | date:'dd/MM/yyyy HH:mm' }}</td>

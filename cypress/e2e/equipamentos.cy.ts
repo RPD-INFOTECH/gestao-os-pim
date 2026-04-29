@@ -20,7 +20,6 @@ describe('Equipamentos', () => {
     cy.visit('/equipamentos/novo');
     cy.get('button[type="submit"]').should('be.disabled');
 
-    cy.get('[data-cy="eq-codigo"]').type('EQ-OBRIG');
     cy.get('[data-cy="eq-nome"]').type('Equipamento Obrigatório');
     cy.get('[data-cy="eq-tipo"]').type('Compressor');
     cy.get('[data-cy="eq-localizacao"]').type('Linha de Teste');
@@ -30,13 +29,11 @@ describe('Equipamentos', () => {
   });
 
   it('cria um equipamento', () => {
-    const codigoUnico = `${eq.codigo}-${Date.now()}`;
     const nomeUnico = `${eq.nome} Novo ${Date.now()}`;
 
     cy.intercept('POST', '/api/equipamentos').as('createEquipamento');
     cy.visit('/equipamentos/novo');
 
-    cy.get('[data-cy="eq-codigo"]').type(codigoUnico);
     cy.get('[data-cy="eq-nome"]').type(nomeUnico);
     cy.get('[data-cy="eq-tipo"]').type(eq.tipo);
     cy.get('[data-cy="eq-localizacao"]').type(eq.localizacao);
@@ -46,6 +43,9 @@ describe('Equipamentos', () => {
     cy.wait('@createEquipamento').its('response.statusCode').should('eq', 201);
     cy.url().should('include', '/equipamentos');
     cy.contains(nomeUnico, { timeout: 15000 }).should('be.visible');
+    cy.contains('[data-cy="equipamento-item"]', nomeUnico)
+      .contains(/EQP-\d{6}/)
+      .should('be.visible');
   });
 
   it('exibe detalhes e permite editar um equipamento', () => {

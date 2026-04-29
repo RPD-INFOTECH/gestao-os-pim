@@ -1,34 +1,39 @@
 # ServicoPIM Frontend
 
-Frontend do sistema de gestao de ordens de servico do projeto ServicoPIM.
+Frontend Angular do sistema ServicoPIM, uma aplicacao para gestao de ordens de servico, equipamentos, usuarios, prazos de atendimento, historico operacional e relatorios.
 
 ## Visao geral
 
-A aplicacao foi construida com:
+O frontend entrega:
 
-- `Angular 21`
-- `TypeScript`
-- `Tailwind CSS`
-- `Cypress` para E2E
-
-O frontend consome a API do projeto `servicoPim-API` e hoje entrega:
-
-- autenticacao por `accessToken` em memoria
+- autenticacao com `accessToken` em memoria
 - renovacao de sessao por `refreshToken` em cookie `HttpOnly`
+- navegacao protegida por autenticacao e perfil
 - dashboard por perfil
 - fluxo completo de ordens de servico
 - apontamentos de trabalho
 - gestao de equipamentos
 - gestao de usuarios
 - historico de O.S.
-- relatorios
-- navegacao protegida por autenticacao e perfil
+- relatorios gerenciais com filtros
+- configuracao de prazo de atendimento para gestor
 
-## Perfis do sistema
+## Tecnologias
+
+- `Angular 21`
+- `TypeScript`
+- `Tailwind CSS`
+- `Angular Router`
+- `Signals` e `computed`
+- `Vitest` via `ng test`
+- `Cypress` para E2E
+- `Docker` e `Nginx` para imagem/container
+
+## Perfis
 
 - `SOLICITANTE`
   - abre O.S.
-  - acompanha apenas as proprias ordens
+  - acompanha as proprias ordens
 
 - `TECNICO`
   - assume O.S. abertas
@@ -38,20 +43,21 @@ O frontend consome a API do projeto `servicoPim-API` e hoje entrega:
   - conclui O.S. sob sua responsabilidade
 
 - `SUPERVISOR`
-  - administra usuarios e equipamentos
+  - administra usuarios funcionais conforme hierarquia
+  - administra equipamentos
   - atribui tecnicos
-  - acompanha historico global
-  - visualiza indicadores consolidados
+  - acompanha historico e indicadores operacionais
 
-## Arquitetura do frontend
+- `GESTOR`
+  - visualiza indicadores gerais
+  - acessa configuracoes de prazo de atendimento
+  - possui acesso de gestao acima do supervisor
 
-Estrutura principal:
+## Estrutura
 
 ```text
 src/
   app/
-    app.config.ts
-    app.routes.ts
     core/
       auth/
       guards/
@@ -59,6 +65,7 @@ src/
       models/
     features/
       auth/
+      configuracoes/
       dashboard/
       equipamentos/
       errors/
@@ -69,76 +76,62 @@ src/
     shared/
       components/
       layouts/
+      models/
       ui/
       utils/
   environments/
+cypress/
+  e2e/
+  fixtures/
+  seeds/
+  support/
 ```
 
-Pontos principais:
+## Seguranca no frontend
 
-- `core/auth/auth.service.ts`
-  gerencia sessao, login, refresh e logout
-
-- `core/interceptors/auth.interceptor.ts`
-  envia `Authorization: Bearer ...` e tenta renovar sessao em `401`
-
-- `core/guards/auth.guard.ts`
-  protege rotas autenticadas
-
-- `core/guards/role.guard.ts`
-  protege rotas por perfil
-
-- `features/*`
-  encapsulam telas, servicos e modelos por dominio funcional
-
-- `shared/*`
-  concentra layout, navbar, toast, botao voltar e utilitarios visuais
-
-## Sessao e seguranca
-
-- `accessToken` nao e salvo em `localStorage` nem `sessionStorage`
-- o token de acesso fica apenas em memoria
-- o `refreshToken` fica em cookie `HttpOnly`, controlado pelo backend
-- o frontend usa `withCredentials` para login, refresh e logout
-- o Nginx do ambiente containerizado adiciona headers de seguranca basicos
+- o `accessToken` fica apenas em memoria
+- o `refreshToken` nao e acessado pelo JavaScript, pois fica em cookie `HttpOnly`
+- o interceptor adiciona `Authorization: Bearer <token>`
+- em `401`, o interceptor tenta renovar a sessao via `/auth/refresh`
+- guards protegem rotas autenticadas e rotas por perfil
+- o Nginx do container faz proxy de `/api` para a API
 
 ## Requisitos
 
 - Node.js `22+`
 - npm
-- backend local em `http://localhost:9090` para desenvolvimento com `ng serve`
+- backend local em `http://localhost:9090` para desenvolvimento
 
-## Como executar em desenvolvimento
-
-Instale as dependencias:
+## Desenvolvimento
 
 ```bash
 npm install
-```
-
-Suba o frontend:
-
-```bash
 npm start
 ```
 
-Aplicacao:
+Aplicacao local:
 
 ```text
 http://localhost:4200
 ```
 
-No modo de desenvolvimento, o Angular usa [`proxy.conf.json`](./proxy.conf.json) para encaminhar chamadas `/api/*` para a API local.
+O arquivo [`proxy.conf.json`](./proxy.conf.json) encaminha chamadas `/api/*` para a API local.
 
-## Como executar em container
+## Docker
 
-Para o ambiente E2E, o frontend sobe junto com a API e um Postgres dedicado:
+Build da imagem:
 
 ```bash
-docker compose -f docker-compose.e2e.yml up -d --build
+docker build -t gestao-os-pim .
 ```
 
-Aplicacao:
+Ambiente com frontend, API, Postgres e PgAdmin:
+
+```bash
+docker compose up -d
+```
+
+Aplicacao via compose:
 
 ```text
 http://localhost:3000
@@ -146,92 +139,72 @@ http://localhost:3000
 
 ## Scripts
 
-- `npm start`
-  sobe o servidor de desenvolvimento Angular
+- `npm start`: sobe o Angular em desenvolvimento
+- `npm run build`: gera build de producao
+- `npm run watch`: build em modo watch
+- `npm test`: executa testes unitarios
+- `npm run cypress:open`: abre Cypress interativo
+- `npm run cypress:run`: executa Cypress headless
+- `npm run e2e`: alias para Cypress headless
 
-- `npm run build`
-  gera o build de producao
+## Testes
 
-- `npm run watch`
-  build em modo watch
-
-- `npm test`
-  executa os testes configurados pelo Angular CLI
-
-- `npm run cypress:open`
-  abre a interface interativa do Cypress
-
-- `npm run cypress:run`
-  roda a suite E2E em modo headless
-
-## Testes do frontend
-
-### 1. Build
-
-Valida compilacao da SPA:
+### Build
 
 ```bash
 npm run build
 ```
 
-### 2. Testes E2E
-
-O E2E depende de:
-
-- frontend em container
-- API em container
-- banco `servicopim_e2e`
-- seed de usuarios e equipamento base
-
-Passo a passo:
+### Unitarios
 
 ```bash
-docker compose -f docker-compose.e2e.yml up -d --build
-bash cypress/seeds/seed-e2e.sh
-npm run cypress:run
+npm test -- --watch=false
 ```
 
-O seed cria ou atualiza estes dados base:
+Cobertura atual relevante:
 
-- `supervisor@seed.local`
-- `tecnico.norte@seed.local`
-- `solicitante.linha1@seed.local`
-- equipamento `SEED-EQP-001`
+- `AuthService`
+- guards de autenticacao e perfil
+- interceptor de autenticacao e refresh
+- services de usuarios, equipamentos, historico, ordens, dashboard e prazo de atendimento
+- pipes de status e tempo trabalhado
+- toast e confirmacao
+- componentes base ja existentes
 
-Senha padrao usada nos testes:
+Ultima validacao local: `58` testes unitarios passando.
 
-```text
-seed123
-```
+### E2E com ambiente Docker
 
-### 3. Rodar uma spec isolada
-
-Exemplo:
+Fluxo recomendado:
 
 ```bash
-npx cypress run --spec cypress/e2e/auth.cy.ts
+bash src/scripts/test-e2e.sh
 ```
 
-## O que a suite E2E cobre hoje
+Esse script:
+
+1. sobe o ambiente E2E com Docker Compose
+2. carrega variaveis `.env.e2e`
+3. aplica seed de dados
+4. roda Cypress
+5. derruba o ambiente ao final
+
+Ultima validacao local: `46` testes E2E passando.
+
+## E2E cobre
 
 - autenticacao
 - dashboard por perfil
-- navegacao e guardas
+- navegacao e guards
 - equipamentos
-- usuarios
+- usuarios e hierarquia de perfis
 - ordens de servico
-
-## Fluxo funcional principal
-
-- `Solicitante` cria a O.S.
-- `Supervisor` atribui tecnico
-- `Tecnico` inicia execucao
-- `Tecnico` abre e fecha apontamentos
-- `Tecnico` conclui a O.S.
-- `Historico` registra as mudancas relevantes
+- relatorios
+- configuracao de prazo de atendimento
+- seguranca de API e sessao
 
 ## Observacoes
 
-- os testes E2E usam `cy.session`, com validacao real via `/api/auth/refresh`
-- como o backend agora revoga refresh token no logout, a sessao cacheada do Cypress e revalidada antes de ser reutilizada
-- o ambiente E2E e separado do ambiente de desenvolvimento
+- O ambiente E2E e separado do desenvolvimento local.
+- `cypress/screenshots`, `cypress/videos`, `dist`, `.angular` e arquivos de ambiente estao ignorados.
+- O arquivo `.dockerignore` reduz o contexto de build e evita enviar `node_modules`, artefatos de teste e arquivos sensiveis para a imagem Docker.

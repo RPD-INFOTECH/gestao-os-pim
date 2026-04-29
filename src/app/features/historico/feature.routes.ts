@@ -7,6 +7,6 @@ export const HISTORICO_ROUTES: Routes = [
   {
     path: '',
     component: Historico,
-    canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.TECNICO)],
+    canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.TECNICO, Perfil.GESTOR)],
   },
 ];

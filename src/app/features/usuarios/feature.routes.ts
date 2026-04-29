@@ -9,21 +9,21 @@ export const USUARIOS_ROUTES: Routes = [
   {
     path: '',
     component: UsuariosList,
-    canActivate: [roleGuard(Perfil.SUPERVISOR)],
+    canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.GESTOR)],
   },
   {
     path: 'novo',
     component: UsuarioForm,
-    canActivate: [roleGuard(Perfil.SUPERVISOR)],
+    canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.GESTOR)],
   },
   {
     path: ':id/detalhes',
     component: UsuarioDetailsPage,
-    canActivate: [roleGuard(Perfil.SUPERVISOR)],
+    canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.GESTOR)],
   },
   {
     path: ':id',
     component: UsuarioForm,
-    canActivate: [roleGuard(Perfil.SUPERVISOR)],
+    canActivate: [roleGuard(Perfil.SUPERVISOR, Perfil.GESTOR)],
   },
 ];

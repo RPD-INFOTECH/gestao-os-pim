@@ -1,0 +1,16 @@
+node_modules
+dist
+.angular
+.git
+.github
+.vscode
+coverage
+cypress
+.env
+.env.local
+.env.e2e
+.env.*.local
+npm-debug.log
+yarn-error.log
+README.md
+LICENSE

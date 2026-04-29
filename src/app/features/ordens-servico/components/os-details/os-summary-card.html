@@ -59,7 +59,8 @@
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
             <p class="text-xs text-slate-500 uppercase font-bold mb-1">Horas Trabalhadas</p>
-            <p class="text-slate-200 font-bold">{{ o.horas_trabalhadas }}h</p>
+            <p class="text-slate-200 font-bold">{{ o.horas_trabalhadas | tempoTrabalhado }}</p>
+            <p class="text-xs text-slate-500">{{ o.horas_trabalhadas | number:'1.2-2' }} h decimais</p>
           </div>
           <div>
             <p class="text-xs text-slate-500 uppercase font-bold mb-1">Concluída em</p>

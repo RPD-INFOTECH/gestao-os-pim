@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { OrdemServicoService } from '@features/ordens-servico/services/ordem-servico.service';
 import { DashboardService } from '@features/dashboard/services/dashboard.service';
-import { DashboardIndicadores, OrdemServico, Prioridade, StatusOs } from '@shared/models/ordem-servico.model';
+import { DashboardIndicadores, OrdemServico, Prioridade, StatusOs, StatusPrazoOs } from '@shared/models/ordem-servico.model';
 import { AuthService } from '@core/auth/auth.service';
 import { Perfil } from '@core/models/perfil.enum';
 import { StatusLabelPipe } from '@shared/ui/status-label.pipe';
@@ -36,6 +36,7 @@ export class Dashboard implements OnInit {
   disponiveisParaAssumir = computed(() => this.indicadores()?.disponiveis_para_assumir ?? 0);
   minhasAtribuidas = computed(() => this.indicadores()?.minhas_atribuidas ?? 0);
   apontamentoAberto = computed(() => this.indicadores()?.apontamento_aberto ?? false);
+  prazoHoras = computed(() => this.indicadores()?.prazo_horas ?? null);
 
   tempoMedioConclusaoHoras = computed(() => this.indicadores()?.tempo_medio_execucao_horas ?? 0);
   tempoMedioAteInicioHoras = computed(() => this.indicadores()?.tempo_medio_ate_inicio_horas ?? 0);
@@ -44,8 +45,17 @@ export class Dashboard implements OnInit {
 
   recentes = computed(() => this.ordens().slice(0, 5));
   isSupervisor = computed(() => this.perfil() === Perfil.SUPERVISOR);
+  isGestor = computed(() => this.perfil() === Perfil.GESTOR);
+  isVisaoGeral = computed(() => this.isSupervisor() || this.isGestor());
   isTecnico = computed(() => this.perfil() === Perfil.TECNICO);
   isSolicitante = computed(() => this.perfil() === Perfil.SOLICITANTE);
+  canCreateOs = computed(() => this.isSupervisor() || this.isSolicitante());
+  prazoConfigurado = computed(() =>
+    Object.values(Prioridade).map((prioridade) => ({
+      prioridade,
+      horas: this.prazoLimiteHoras(prioridade),
+    })),
+  );
 
   ngOnInit(): void {
     this.loading.set(true);
@@ -97,9 +107,20 @@ export class Dashboard implements OnInit {
     }
   }
 
-  slaBadge(o: OrdemServico): string {
-    const limiteHoras = this.slaLimiteHoras(o.prioridade);
-    const base = new Date(o.inicio_em ?? o.abertura_em).getTime();
+  prazoBadge(o: OrdemServico): string {
+    if (
+      o.status_prazo === StatusPrazoOs.CONCLUIDA_COM_PRAZO_ESTOURADO ||
+      o.status_prazo === StatusPrazoOs.ESTOURADO
+    ) {
+      return 'bg-red-900/40 text-red-400';
+    }
+
+    if (o.status_prazo === StatusPrazoOs.CONCLUIDA_NO_PRAZO) {
+      return 'bg-green-900/40 text-green-400';
+    }
+
+    const limiteHoras = this.prazoLimiteHoras(o.prioridade);
+    const base = new Date(o.abertura_em).getTime();
     const fim = new Date(o.conclusao_em ?? new Date()).getTime();
     const horas = (fim - base) / (1000 * 60 * 60);
 
@@ -114,9 +135,21 @@ export class Dashboard implements OnInit {
     return 'bg-blue-900/40 text-blue-400';
   }
 
-  slaLabel(o: OrdemServico): string {
-    const limiteHoras = this.slaLimiteHoras(o.prioridade);
-    const base = new Date(o.inicio_em ?? o.abertura_em).getTime();
+  prazoLabel(o: OrdemServico): string {
+    if (o.status_prazo === StatusPrazoOs.CONCLUIDA_COM_PRAZO_ESTOURADO) {
+      return 'CONCLUÍDA FORA DO PRAZO';
+    }
+
+    if (o.status_prazo === StatusPrazoOs.CONCLUIDA_NO_PRAZO) {
+      return 'CONCLUÍDA NO PRAZO';
+    }
+
+    if (o.status_prazo === StatusPrazoOs.ESTOURADO) {
+      return 'ESTOURADO';
+    }
+
+    const limiteHoras = this.prazoLimiteHoras(o.prioridade);
+    const base = new Date(o.abertura_em).getTime();
     const fim = new Date(o.conclusao_em ?? new Date()).getTime();
     const horas = (fim - base) / (1000 * 60 * 60);
 
@@ -131,7 +164,10 @@ export class Dashboard implements OnInit {
     return 'NO PRAZO';
   }
 
-  private slaLimiteHoras(prioridade: Prioridade): number {
+  private prazoLimiteHoras(prioridade: Prioridade): number {
+    const configurado = this.prazoHoras()?.[prioridade];
+    if (configurado) return configurado;
+
     switch (prioridade) {
       case Prioridade.CRITICA:
         return 4;

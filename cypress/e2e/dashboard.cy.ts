@@ -2,6 +2,7 @@ import dadosTeste from '../fixtures/dados-teste.json';
 
 const tecnico = dadosTeste.usuario_tecnico;
 const solicitante = dadosTeste.usuario_solicitante;
+const gestor = dadosTeste.usuario_gestor;
 
 describe('Dashboard', () => {
   it('carrega o dashboard do supervisor sem erros de API', () => {
@@ -37,5 +38,15 @@ describe('Dashboard', () => {
     cy.contains('Tempo médio até conclusão', { matchCase: false }).should('be.visible');
     cy.contains('Equipamentos').should('not.exist');
     cy.contains('Histórico').should('not.exist');
+  });
+
+  it('exibe visão geral e atalhos de prazo de atendimento para gestor', () => {
+    cy.login(gestor.email, gestor.senha);
+    cy.visit('/dashboard');
+
+    cy.contains('OS abertas', { matchCase: false }).should('be.visible');
+    cy.contains('Prazo de Atendimento vigente', { matchCase: false }).should('be.visible');
+    cy.contains('Configurar Prazo', { matchCase: false }).should('be.visible');
+    cy.contains('Nova O.S.').should('not.exist');
   });
 });

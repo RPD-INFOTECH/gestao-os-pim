@@ -30,10 +30,11 @@ export class Navbar implements OnInit, OnDestroy {
   private allItems: MenuItem[] = [
     { label: 'Dashboard', icon: 'dashboard', link: '/dashboard' },
     { label: 'Ordens de Serviço', icon: 'precision_manufacturing', link: '/ordens-de-servico' },
-    { label: 'Equipamentos', icon: 'inventory_2', link: '/equipamentos', roles: [Perfil.TECNICO, Perfil.SUPERVISOR] },
-    { label: 'Usuários', icon: 'group', link: '/usuarios', roles: [Perfil.SUPERVISOR] },
-    { label: 'Histórico', icon: 'history', link: '/historico', roles: [Perfil.SUPERVISOR, Perfil.TECNICO] },
-    { label: 'Relatórios', icon: 'analytics', link: '/relatorios', roles: [Perfil.SUPERVISOR] },
+    { label: 'Equipamentos', icon: 'inventory_2', link: '/equipamentos', roles: [Perfil.TECNICO, Perfil.SUPERVISOR, Perfil.GESTOR] },
+    { label: 'Usuários', icon: 'group', link: '/usuarios', roles: [Perfil.SUPERVISOR, Perfil.GESTOR] },
+    { label: 'Histórico', icon: 'history', link: '/historico', roles: [Perfil.SUPERVISOR, Perfil.TECNICO, Perfil.GESTOR] },
+    { label: 'Relatórios', icon: 'analytics', link: '/relatorios', roles: [Perfil.SUPERVISOR, Perfil.GESTOR] },
+    { label: 'Prazo de Atendimento', icon: 'timer', link: '/configuracoes/prazo-atendimento', roles: [Perfil.GESTOR] },
   ];
 
   menu = computed<MenuItem[]>(() => {
@@ -53,6 +54,8 @@ export class Navbar implements OnInit, OnDestroy {
     switch (this.perfil()) {
       case Perfil.SUPERVISOR:
         return 'Supervisor';
+      case Perfil.GESTOR:
+        return 'Gestor';
       case Perfil.TECNICO:
         return 'Técnico';
       case Perfil.SOLICITANTE:

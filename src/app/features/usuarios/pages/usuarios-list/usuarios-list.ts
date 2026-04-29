@@ -8,6 +8,7 @@ import { ToastService } from '@shared/components/toast/toast.service';
 import { Perfil } from '@core/models/perfil.enum';
 import { computed } from '@angular/core';
 import { ConfirmationService } from '@shared/components/confirm/confirmation.service';
+import { AuthService } from '@core/auth/auth.service';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -18,6 +19,7 @@ export class UsuariosList implements OnInit {
   private service = inject(UsuarioService);
   private toast = inject(ToastService);
   private confirmation = inject(ConfirmationService);
+  private auth = inject(AuthService);
 
   usuarios = signal<Usuario[]>([]);
   loading = signal(false);
@@ -27,6 +29,25 @@ export class UsuariosList implements OnInit {
   setorFiltro = signal('');
   statusFiltro = signal<'todos' | 'ativos' | 'inativos'>('todos');
   perfis = Object.values(Perfil);
+  canWrite = computed(() => {
+    const perfil = this.auth.currentPerfil();
+    return perfil === Perfil.SUPERVISOR || perfil === Perfil.GESTOR;
+  });
+  canDelete = computed(() => this.auth.currentPerfil() === Perfil.SUPERVISOR);
+
+  canEdit(usuario: Usuario): boolean {
+    const perfil = this.auth.currentPerfil();
+
+    if (perfil === Perfil.GESTOR) {
+      return [Perfil.SUPERVISOR, Perfil.TECNICO, Perfil.SOLICITANTE].includes(usuario.perfil);
+    }
+
+    if (perfil === Perfil.SUPERVISOR) {
+      return [Perfil.TECNICO, Perfil.SOLICITANTE].includes(usuario.perfil);
+    }
+
+    return false;
+  }
 
   setores = computed(() => {
     const values = new Set(
@@ -89,6 +110,8 @@ export class UsuariosList implements OnInit {
   }
 
   async onDelete(u: Usuario): Promise<void> {
+    if (!this.canDelete()) return;
+
     const confirmed = await this.confirmation.confirm({
       title: 'Desativar usuário',
       message: `Confirma a desativação do usuário "${u.nome}"?`,

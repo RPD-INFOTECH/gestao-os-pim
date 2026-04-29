@@ -11,12 +11,22 @@
       >
         Ver listagem
       </a>
-      <a
-        [routerLink]="['/ordens-de-servico/nova']"
-        class="rounded-lg bg-blue-600 px-4 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-500"
-      >
-        Nova O.S.
-      </a>
+      @if (canCreateOs()) {
+        <a
+          [routerLink]="['/ordens-de-servico/nova']"
+          class="rounded-lg bg-blue-600 px-4 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-500"
+        >
+          Nova O.S.
+        </a>
+      }
+      @if (isGestor()) {
+        <a
+          [routerLink]="['/configuracoes/prazo-atendimento']"
+          class="rounded-lg bg-blue-600 px-4 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-500"
+        >
+          Configurar Prazo
+        </a>
+      }
     </div>
   </header>
 
@@ -25,7 +35,7 @@
   } @else if (error()) {
     <div class="bg-red-900/20 border border-red-900 text-red-300 p-4 rounded-lg mb-6">{{ error() }}</div>
   } @else {
-    @if (isSupervisor()) {
+    @if (isVisaoGeral()) {
       <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article class="rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
           <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">OS abertas</p>
@@ -60,6 +70,28 @@
           <p class="text-3xl font-bold text-slate-100 sm:text-4xl">{{ tempoMedioAteConclusaoHoras() | number:'1.1-1' }}h</p>
         </article>
       </div>
+    }
+
+    @if (isGestor()) {
+      <section class="mb-8 rounded-2xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6">
+        <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-slate-100">Prazo de Atendimento vigente</h2>
+            <p class="text-sm text-slate-400">Limites atuais aplicados aos indicadores por prioridade.</p>
+          </div>
+          <a [routerLink]="['/configuracoes/prazo-atendimento']" class="text-sm font-semibold text-blue-300 hover:text-blue-200">
+            Ajustar limites
+          </a>
+        </div>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          @for (item of prazoConfigurado(); track item.prioridade) {
+            <article class="rounded-xl border border-slate-800 bg-slate-950/40 p-4">
+              <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">{{ item.prioridade }}</p>
+              <p class="mt-2 text-2xl font-bold text-slate-100">{{ item.horas }}h</p>
+            </article>
+          }
+        </div>
+      </section>
     }
 
     @if (isTecnico()) {
@@ -142,7 +174,7 @@
               <th class="px-6 py-4">Equipamento</th>
               <th class="px-6 py-4">Prioridade</th>
               <th class="px-6 py-4">Status</th>
-              <th class="px-6 py-4">SLA</th>
+              <th class="px-6 py-4">Prazo</th>
               <th class="px-6 py-4">Abertura</th>
               <th class="px-6 py-4 text-right">Ação</th>
             </tr>
@@ -166,8 +198,8 @@
                   </span>
                 </td>
                 <td class="px-6 py-4">
-                  <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="slaBadge(o)">
-                    {{ slaLabel(o) }}
+                  <span class="text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider" [class]="prazoBadge(o)">
+                    {{ prazoLabel(o) }}
                   </span>
                 </td>
                 <td class="px-6 py-4 text-slate-500 text-xs font-mono">{{ o.abertura_em | date:'dd/MM/yyyy HH:mm' }}</td>
