@@ -11,6 +11,17 @@ until curl -sf http://localhost:3000/api/health > /dev/null 2>&1; do
   sleep 3
 done
 
+echo "Garantindo enum GESTOR no banco E2E..."
+docker compose -f docker-compose.e2e.yml exec -T postgres psql -U postgres -d servicopim_e2e -c "
+DO \$\$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_type WHERE typname = 'usuario_perfil_enum') THEN
+    ALTER TYPE usuario_perfil_enum ADD VALUE IF NOT EXISTS 'GESTOR';
+  END IF;
+END
+\$\$;
+"
+
 echo "Criando usuários e equipamento de teste..."
 docker compose -f docker-compose.e2e.yml exec -T postgres psql -U postgres -d servicopim_e2e -c "
 WITH seed_password AS (

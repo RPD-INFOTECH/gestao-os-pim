@@ -14,7 +14,7 @@ services:
   api:
     build:
       context: ../servicoPim-API
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     environment:
       PORT: 9090
       DB_HOST: postgres
