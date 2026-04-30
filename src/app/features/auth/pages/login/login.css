@@ -7,3 +7,18 @@
   position: relative;
   overflow: hidden;
 }
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.brand-os {
+  background: linear-gradient(90deg, #60a5fa, #38bdf8, #67e8f9, #38bdf8, #60a5fa);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.7));
+}
