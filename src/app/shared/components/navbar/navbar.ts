@@ -25,7 +25,7 @@ export class Navbar implements OnInit, OnDestroy {
   perfil = this.auth.currentPerfil;
   now = signal(new Date());
   sidebarOpen = signal(false);
-  environmentLabel = environment.production ? 'Produção' : 'Local';
+  environmentLabel = environment.production ? 'Produção' : 'Online';
 
   private allItems: MenuItem[] = [
     { label: 'Dashboard', icon: 'dashboard', link: '/dashboard' },
